@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaBuddyIdeaProjectConfig">
+    <option name="reLastEntityCreationPackage" value="src/main/java/com/in/nova/tech/entity" />
+    <option name="reverseEngineeringLastDbConnectionId" value="acc36480-ef9a-4497-9fd8-b8f0e43783b1" />
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="innova" name="JPA-EL-GUAPO-TOO" framework="JPA" ormUnit="innova:JPA-EL-GUAPO-TOO" defaultDataSourceId="acc36480-ef9a-4497-9fd8-b8f0e43783b1" />
+    </persistence-units>
+  </component>
+</project>
