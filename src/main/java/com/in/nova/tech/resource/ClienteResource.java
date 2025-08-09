@@ -9,6 +9,7 @@ package com.in.nova.tech.resource;
 
 import com.in.nova.tech.dto.ClienteDto;
 import com.in.nova.tech.entity.Cliente;
+import com.in.nova.tech.entity.Ticket;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -62,6 +63,14 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
             return null;
         }
         ClienteDto dto = new ClienteDto();
+        Ticket ticket = new Ticket();
+        List<String> tickets = new ArrayList<>();
+        if (entity.getTickets() != null) {
+            for (Ticket t : entity.getTickets()) {
+                tickets.add(t.getId().toString()); // Agrega el ID del ticket como String
+            }
+            dto.setIdtickets(tickets); // Asigna la lista de IDs al DTO
+        }
         dto.setId(entity.getId());
         dto.setCorreo(entity.getCorreo());
         dto.setNombreCompleto(entity.getNombreCompleto());

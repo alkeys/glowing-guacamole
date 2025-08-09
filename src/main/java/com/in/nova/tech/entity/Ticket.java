@@ -8,6 +8,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 package com.in.nova.tech.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Ticket {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_cliente", nullable = false)
+
     private Cliente idCliente;
 
     @NotNull
