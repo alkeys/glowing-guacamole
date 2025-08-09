@@ -32,4 +32,7 @@ public class Tecnico {
     @Column(name = "especialidad", length = 50)
     private String especialidad;
 
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = true;
+
 }

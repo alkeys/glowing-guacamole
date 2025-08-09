@@ -15,6 +15,7 @@ CREATE TABLE tecnicos (
                           id_tecnico SERIAL PRIMARY KEY,
                           nombre_completo VARCHAR(100) NOT NULL,
                           especialidad VARCHAR(50) -- ejemplo: hardware, redes, software
+                        , activo BOOLEAN DEFAULT TRUE
 );
 
 -- Tabla de tipos de servicio
@@ -43,33 +44,3 @@ CREATE TABLE tickets (
                          solucion TEXT
 );
 
--- ===================
--- INSERCIÓN BÁSICA DE DATOS
--- ===================
-
--- Estados posibles
-INSERT INTO estados_ticket (nombre_estado) VALUES
-                                               ('Abierto'), ('En proceso'), ('Cerrado');
-
--- Tipos de servicio
-INSERT INTO tipos_servicio (nombre_tipo) VALUES
-                                             ('Hardware'), ('Software'), ('Redes');
-
--- Técnicos de ejemplo
-INSERT INTO tecnicos (nombre_completo, especialidad) VALUES
-                                                         ('Luis Torres', 'Hardware'),
-                                                         ('Ana Pérez', 'Software'),
-                                                         ('Carlos Martínez', 'Redes');
-
--- Cliente de ejemplo
-INSERT INTO clientes (nombre_completo, correo, telefono) VALUES
-    ('Juan López', 'juan@example.com', '7070-7070');
-
--- Ticket de ejemplo
-INSERT INTO tickets (
-    id_cliente, id_tipo_servicio, fecha_solicitud, id_tecnico, id_estado,
-    fecha_asignacion, diagnostico, solucion
-) VALUES (
-             1, 1, '2025-08-01', 1, 2, '2025-08-02',
-             'Fuente de poder defectuosa', 'Se reemplazó la fuente de poder'
-         );

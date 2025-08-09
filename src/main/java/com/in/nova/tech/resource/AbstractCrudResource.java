@@ -20,10 +20,30 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * Recurso REST abstracto y genérico para operaciones CRUD usando Entidades y DTOs.
- * @param <T>  El tipo de la entidad (ej. Cliente).
- * @param <D>  El tipo del DTO (ej. ClienteDto).
- * @param <ID> El tipo del ID de la entidad (ej. Integer, Long).
+ * como funciona:
+ * Esta clase abstracta proporciona una implementación genérica de un recurso RESTful
+ * para operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre una entidad genérica T.
+ * Las clases hijas deben implementar los métodos abstractos para proporcionar la lógica
+ * específica de la entidad, como la conversión entre entidad y DTO, y el acceso al servicio de persistencia (DAO).
+ * Los métodos CRUD genéricos permiten realizar operaciones comunes como listar, obtener por ID,
+ * crear, actualizar y eliminar entidades, utilizando DTOs para la comunicación con el cliente.
+ * Los métodos también manejan errores y devuelven respuestas adecuadas en formato JSON.
+ * Esta clase es útil para reducir la duplicación de código en recursos RESTful
+ * que manejan entidades similares, permitiendo a los desarrolladores centrarse en la lógica específica
+ * de la entidad sin preocuparse por la implementación de los métodos CRUD comunes.
+ * Ejemplo de uso:
+ * Para crear un recurso RESTful para una entidad Cliente, se puede extender esta clase
+ * y proporcionar implementaciones específicas para los métodos abstractos.
+ * Por ejemplo, una clase ClienteResource podría implementar los métodos
+ * getService(), getId(), setId(), toDto() y toEntity() para manejar
+ * la entidad Cliente y su DTO ClienteDto.
+ * De esta manera, se puede reutilizar la lógica CRUD genérica
+ * proporcionada por AbstractCrudResource, evitando la necesidad de escribir
+ * código repetitivo para cada entidad similar.
+ * y que sueño tengo
+ * @param <T>  El tipo de la entidad (ej. Cliente). esta es la entidad que se va a manejar en el recurso RESTful.
+ * @param <D>  El tipo del DTO (ej. ClienteDto). esto es un objeto de transferencia de datos que representa la entidad T.
+ * @param <ID> El tipo del ID de la entidad (ej. Integer, Long). esto es el tipo de dato que se utiliza para identificar de manera única a la entidad T.
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
