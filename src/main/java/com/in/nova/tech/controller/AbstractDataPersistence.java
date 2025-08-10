@@ -44,7 +44,11 @@ public abstract class AbstractDataPersistence<T> {
     }
 
     /**
-     * Crea una nueva entidad en la base de datos.
+     <p>El método `create` persiste una nueva entidad en la base de datos usando JPA.
+     Primero valida que la entidad no sea nula. Luego obtiene un `EntityManager` válido y llama a `persist(entity)`
+     para marcar la entidad como nueva y gestionada. Después, ejecuta `flush()` para sincronizar los cambios con la base de datos inmediatamente.
+     Si ocurre algún error, lanza una excepción con un mensaje descriptivo.</p>
+     * @param entity Entidad a persistir.
      */
     public void create(final T entity) {
         if (entity == null) {
@@ -54,7 +58,7 @@ public abstract class AbstractDataPersistence<T> {
         try {
             EntityManager em = requireEntityManager();
             em.persist(entity);
-            em.flush(); // 👈 fuerza sincronización inmediata con la base
+            em.flush();
         } catch (Exception ex) {
             throw new IllegalStateException("Error al persistir la entidad.", ex);
         }
@@ -62,7 +66,10 @@ public abstract class AbstractDataPersistence<T> {
 
 
     /**
-     * Busca una entidad por su ID.
+     <p>El método `findById` busca y retorna una entidad de tipo `T` usando su identificador (`id`). Primero valida que el `id` no sea nulo,
+     lanzando una excepción si lo es. Luego, intenta obtener la entidad usando el método `find` del `EntityManager`, pasando la clase de
+     la entidad (`tipoDato`) y el `id`. Si ocurre algún error durante la búsqueda, lanza una excepción con un mensaje descriptivo.</p>
+     * @param id Identificador de la entidad a buscar.
      */
     public T findById(final Object id) {
         if (id == null) {
@@ -77,7 +84,10 @@ public abstract class AbstractDataPersistence<T> {
     }
 
     /**
-     * Elimina una entidad de la base de datos.
+      <p>La función `delete` elimina una entidad de la base de datos usando JPA. Primero verifica que la entidad no sea nula.
+      Luego obtiene un `EntityManager` válido, asegura que la entidad esté gestionada mediante `merge`, y finalmente la elimina con `remove`.
+      Si ocurre un error, lanza una excepción con un mensaje descriptivo.</p>
+        * @param entity Entidad a eliminar.
      */
     public void delete(final T entity) {
         if (entity == null) {
@@ -94,7 +104,11 @@ public abstract class AbstractDataPersistence<T> {
     }
 
     /**
-     * Actualiza una entidad en la base de datos.
+     <p> El método `update` actualiza una entidad en la base de datos usando JPA. Primero verifica que la entidad no sea nula,
+     lanzando una excepción si lo es. Luego, intenta fusionar la entidad con el contexto de persistencia usando `merge`,
+     lo que devuelve la entidad gestionada. Después, llama a `flush()` para sincronizar los cambios con la base de datos
+     inmediatamente (esto es opcional). Si ocurre algún error, lanza una excepción con un mensaje descriptivo.</p>
+     * @param entity Entidad a actualizar.
      */
     public T update(final T entity) {
         if (entity == null) {
@@ -112,6 +126,10 @@ public abstract class AbstractDataPersistence<T> {
 
 
     /**
+     <p>El método `findRange` implementa paginación usando JPA Criteria API. Recibe dos parámetros: `first` (índice inicial, base 0) y
+     `pageSize` (cantidad de resultados). Valida que ambos sean válidos, luego construye una consulta para la entidad genérica `T`,
+     y usa `setFirstResult` y `setMaxResults` para limitar los resultados devueltos. Si ocurre un error, lanza una excepción.
+     Devuelve una lista de entidades del rango solicitado.</p>
      * Retorna una lista de entidades en un rango (paginación).
      */
     public List<T> findRange(int first, int pageSize) {
@@ -139,7 +157,9 @@ public abstract class AbstractDataPersistence<T> {
     }
 
     /**
-     * Cuenta el total de entidades almacenadas.
+     <p>El método `count()` cuenta el número total de entidades del tipo `T` en la base de datos.
+     Utiliza la Criteria API de JPA para construir una consulta que realiza un `SELECT COUNT` sobre la entidad.
+     Ejecuta la consulta y retorna el resultado como un entero. Si ocurre un error, lanza una excepción con un mensaje descriptivo.</p>
      */
     public int count() {
         try {
@@ -156,6 +176,21 @@ public abstract class AbstractDataPersistence<T> {
         }
     }
 
+
+    /**
+     <p>El método `findAll()` recupera todas las entidades del tipo `T` desde la base de datos usando la Criteria API de JPA.
+
+     1. Obtiene un `EntityManager` válido.
+     2. Usa `CriteriaBuilder` para crear una consulta (`CriteriaQuery`) del tipo de entidad.
+     3. Define el origen de la consulta (`Root<T>`).
+     4. Selecciona todos los registros (`cq.select(root)`).
+     5. Crea y ejecuta la consulta (`TypedQuery<T>`), devolviendo la lista de resultados.
+     6. Si ocurre un error, lanza una excepción con un mensaje descriptivo.
+
+     Este método es genérico y funciona para cualquier entidad JPA gestionada por la clase.
+     </p>
+     * @return
+     */
     public List<T> findAll() {
         try {
             EntityManager em = requireEntityManager();
