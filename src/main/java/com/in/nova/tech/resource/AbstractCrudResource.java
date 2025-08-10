@@ -7,11 +7,11 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 
 package com.in.nova.tech.resource;
 
-import com.in.nova.tech.control.AbstractDataPersistence;
+import com.in.nova.tech.controller.AbstractDataPersistence;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

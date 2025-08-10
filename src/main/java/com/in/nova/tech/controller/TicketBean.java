@@ -5,28 +5,31 @@ Prohibido su uso con fines comerciales.
 Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 
-package com.in.nova.tech.control;
+package com.in.nova.tech.controller;
 
-import com.in.nova.tech.entity.TiposServicio;
+
+import com.in.nova.tech.entity.Ticket;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.io.Serializable;
 
 @Stateless
 @LocalBean
-public class TiposServicioBean extends AbstractDataPersistence<TiposServicio> implements Serializable {
+public class TicketBean extends AbstractDataPersistence<Ticket> implements Serializable {
+
     @PersistenceContext(unitName = "JPA-EL-GUAPO-TOO")
     private EntityManager em;
 
-    public TiposServicioBean() {
-        super(TiposServicio.class);
+    public TicketBean() {
+        super(Ticket.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
-        return em;
+        return  em;
     }
-
 }
+

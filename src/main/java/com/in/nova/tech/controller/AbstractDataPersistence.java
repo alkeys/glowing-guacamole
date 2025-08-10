@@ -6,7 +6,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 
-package com.in.nova.tech.control;
+package com.in.nova.tech.controller;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

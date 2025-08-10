@@ -36,7 +36,7 @@ COPY --chown=1001:0 src/main/liberty/config/postgresql-42.7.6.jar /config/
 COPY --chown=1001:0 ./keystore.p12 /config/
 
 # Copiar el archivo WAR desde la etapa de build
-COPY --chown=1001:0 --from=build /app/target/mascotas-1.0-SNAPSHOT.war /config/dropins/
+COPY --chown=1001:0 --from=build /app/target/innova-1.0-SNAPSHOT.war /config/dropins/
 
 # Exponer puertos (HTTP, HTTPS, otro si lo usás)
 EXPOSE 9080 9443 10000

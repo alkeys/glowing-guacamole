@@ -7,8 +7,8 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 package com.in.nova.tech.resource;
 
 
-import com.in.nova.tech.control.AbstractDataPersistence;
-import com.in.nova.tech.control.TecnicoBean;
+import com.in.nova.tech.controller.AbstractDataPersistence;
+import com.in.nova.tech.controller.TecnicoBean;
 import com.in.nova.tech.dto.TecnicoDto;
 import com.in.nova.tech.entity.Tecnico;
 import jakarta.inject.Inject;

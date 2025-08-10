@@ -45,11 +45,20 @@ docker start innovaTechDB
 ```bash
 keytool -genkeypair -alias appkey \
 -keyalg RSA -keysize 2048 -validity 365 \
--keystore keystore.p12 -storetype PKCS12 \
+-keystore innova-prod.p12 -storetype PKCS12 \
 -storepass secret -keypass secret \
 -dname "CN=localhost, OU=dev, O=empresa, L=ciudad, ST=estado, C=US"
 ```
 
+#Generación del Keystore con SAN (Subject Alternative Name) esto sirve para generar un certificado SSL para el servidor de desarrollo de Liberty. 
+```bash
+keytool -genkeypair -alias appkey \
+-keyalg RSA -keysize 2048 -validity 365 \
+-keystore innova-prod.p12 -storetype PKCS12 \
+-storepass SuperPass123 -keypass SuperPass123 \
+-dname "CN=localhost, OU=dev, O=empresa, L=ciudad, ST=estado, C=US" \
+-ext "SAN=DNS:localhost,IP:127.0.0.1"
+```
 
 
 # Creación de contendor de Docker para el Servidor de Desarrollo de Liberty 
@@ -88,4 +97,5 @@ Para detener el contenedor de Docker, puedes utilizar el siguiente comando:
 ```bash 
 docker-compose down
 ```
+
 

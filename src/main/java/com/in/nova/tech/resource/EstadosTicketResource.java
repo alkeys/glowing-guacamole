@@ -7,8 +7,8 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 package com.in.nova.tech.resource;
 
 
-import com.in.nova.tech.control.AbstractDataPersistence;
-import com.in.nova.tech.control.EstadosTicketBean;
+import com.in.nova.tech.controller.AbstractDataPersistence;
+import com.in.nova.tech.controller.EstadosTicketBean;
 import com.in.nova.tech.dto.EstadosTicketDto;
 import com.in.nova.tech.entity.EstadosTicket;
 import jakarta.inject.Inject;

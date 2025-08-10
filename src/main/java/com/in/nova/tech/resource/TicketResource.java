@@ -7,7 +7,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 
 package com.in.nova.tech.resource;
 
-import com.in.nova.tech.control.*;
+import com.in.nova.tech.controller.*;
 import com.in.nova.tech.dto.TicketDto;
 import com.in.nova.tech.entity.*;
 import jakarta.inject.Inject;

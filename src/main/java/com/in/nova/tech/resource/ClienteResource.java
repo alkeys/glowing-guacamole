@@ -10,15 +10,11 @@ package com.in.nova.tech.resource;
 import com.in.nova.tech.dto.ClienteDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
-import com.in.nova.tech.control.AbstractDataPersistence;
-import com.in.nova.tech.control.ClientesBean;
+import com.in.nova.tech.controller.AbstractDataPersistence;
+import com.in.nova.tech.controller.ClientesBean;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
