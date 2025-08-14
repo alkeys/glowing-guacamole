@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * DTO para representar un Cliente en la UI.
@@ -22,11 +23,20 @@ import java.util.List;
 @Getter
 @Setter
 public class ClienteDto implements Serializable {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
     private String nombreCompleto;
     private String correo;
     private String telefono;
+
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<String> idtickets; // Lista de IDs de tickets asociados al cliente
+    private List<String> TicketsId;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    //lista de tickets asociados al cliente datos solo de lectura
+    //datos basicos del ticket id,diagnostico
+    private Map<String,String> tickets;
+
+
 
 }

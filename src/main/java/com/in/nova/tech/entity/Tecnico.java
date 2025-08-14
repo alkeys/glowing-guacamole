@@ -7,6 +7,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 
 package com.in.nova.tech.entity;
 
+import com.in.nova.tech.entity.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,5 +35,9 @@ public class Tecnico {
 
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_usuario")
+    private Usuario idUsuario;
 
 }

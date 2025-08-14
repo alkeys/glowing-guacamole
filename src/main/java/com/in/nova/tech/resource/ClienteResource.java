@@ -19,6 +19,7 @@ import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Path("/clientes") // Define la ruta base para los recursos de Cliente
@@ -60,12 +61,13 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
         }
         ClienteDto dto = new ClienteDto();
         Ticket ticket = new Ticket();
+        List<String> ticketsid = new ArrayList<>();
         List<String> tickets = new ArrayList<>();
         if (entity.getTickets() != null) {
             for (Ticket t : entity.getTickets()) {
-                tickets.add(t.getId().toString()); // Agrega el ID del ticket como String
+                ticketsid.add(t.getId().toString()); // Agrega el ID del ticket como String
             }
-            dto.setIdtickets(tickets); // Asigna la lista de IDs al DTO
+            dto.setTicketsId(ticketsid);
         }
         dto.setId(entity.getId());
         dto.setCorreo(entity.getCorreo());

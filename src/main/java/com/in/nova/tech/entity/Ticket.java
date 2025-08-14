@@ -30,7 +30,6 @@ public class Ticket {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_cliente", nullable = false)
-
     private Cliente idCliente;
 
     @NotNull

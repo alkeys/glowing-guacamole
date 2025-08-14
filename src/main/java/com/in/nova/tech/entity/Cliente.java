@@ -10,6 +10,7 @@ package com.in.nova.tech.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.in.nova.tech.entity.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -46,5 +47,9 @@ public class Cliente {
     @JsonProperty
     @JsonIgnore
     private List<Ticket> tickets;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario")
+    private Usuario idUsuario;
 
 }

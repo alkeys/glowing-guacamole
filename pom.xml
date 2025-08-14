@@ -18,10 +18,19 @@
     </properties>
 
     <dependencies>
+
+        <!-- libreria para manejo de criptografía -->
+        <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
         <!-- Jakarta EE API -->
         <dependency>
             <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
+            <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>10.0.0</version>
             <scope>provided</scope>
         </dependency>

@@ -19,4 +19,5 @@ public class TecnicoDto implements Serializable {
     private String nombreCompleto;
     private String especialidad;
     private Boolean activo = true;
+
 }
