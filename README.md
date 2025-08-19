@@ -1,4 +1,4 @@
-
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/alkeys/glowing-guacamole)
 # Servidor de Desarrollo de Liberty
 Este proyecto utiliza el plugin de Maven para Open Liberty, que permite ejecutar un servidor de desarrollo de Liberty. 
 El servidor se ejecuta en modo de desarrollo, lo que significa que los cambios en el código fuente se reflejarán automáticamente
