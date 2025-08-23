@@ -45,7 +45,6 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
         UsuarioDto dto = new UsuarioDto();
         dto.setId(entity.getId());
         dto.setNombreUsuario(entity.getNombreUsuario());
-
         dto.setRol(entity.getRol());
         try {
             dto.setIdUsuario(entity.getCliente().getIdUsuario().getId());

@@ -33,11 +33,11 @@ credenciales de acceso a la base de datos:
 - Puerto: 5432
 - Para Crear el contenedor de PostgreSQL, asegúrate de tener Docker instalado y ejecuta el siguiente comando:
 ```bash
-docker run --name innovaTechDB -e POSTGRES_DB=innovaTech -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres
+docker run --name innovatechDB -e POSTGRES_DB=innovaTech -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres
 ```
 #para correr el contenedor de PostgreSQL, asegúrate de tener Docker instalado y ejecuta el siguiente comando:
 ```bash
-docker start innovaTechDB
+docker start innovatechDB
 ```
 
 
@@ -63,19 +63,17 @@ keytool -genkeypair -alias appkey \
 
 # Creación de contendor de Docker para el Servidor de Desarrollo de Liberty 
 Para crear un contenedor de Docker para el servidor de desarrollo de Liberty, puedes utilizar el siguiente comando:
-```bash
-mvn clean package
-```
+
 
 ```bash
-docker build -t innovaTechdb.
+docker build -t innovatechdb .
 ```
 
 # Ejecución del Contenedor de Docker
 Para ejecutar el contenedor de Docker que has creado, utiliza el siguiente comando:
 
 ```bash 
-docker run --name too_app -p 9090:9090 -p 9443:9443 innovaTechdb
+docker run --name too_app -p 1000:1000 -p 9443:9443 innovatechdb
 ```
 # para parar el contenedor de Docker, puedes utilizar el siguiente comando:
 
