@@ -18,8 +18,10 @@
 
 
 
-    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="1000" httpsPort="-1"/>
-
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="*"
+                  httpPort="9090"
+                  httpsPort="9494" />
 
     <basicRegistry id="basic" realm="BasicRealm" />
 
@@ -43,14 +45,12 @@
         <file name="${server.config.dir}/postgresql-42.7.6.jar"/>
     </library>
 
+
     <basicRegistry id="basic" realm="BasicRealm">
-        <user name="admin" password="PapasFritasConChocolate"/>
-        <group name="admin">
-            <member name="admin"/>
+        <user name="${env.BSR_USER}" password="${env.BSR_PASSWORD}"/>
+        <group name="${env.BSR_GROUP}">
+            <member name="${env.BSR_MEMBER}"/>
         </group>
     </basicRegistry>
-
-
-
 
 </server>
