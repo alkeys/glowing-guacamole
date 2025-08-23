@@ -10,18 +10,16 @@
         <feature>persistence-3.1</feature>
     </featureManager>
 
-    <keyStore id="defaultKeyStore"
+<!--    <keyStore id="defaultKeyStore"
               location="${server.config.dir}/resources/security/innova-local.p12"
               type="PKCS12"
               password="SuperPass123"/>
-    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" keyAlias="appkey"/>
+    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" keyAlias="appkey"/>-->
 
 
 
-    <httpEndpoint id="defaultHttpEndpoint"
-                  host="*"
-                  httpPort="9090"
-                  httpsPort="9494" />
+    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="1000" httpsPort="-1"/>
+
 
     <basicRegistry id="basic" realm="BasicRealm" />
 
