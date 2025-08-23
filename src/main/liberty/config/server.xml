@@ -19,7 +19,7 @@
 
 
     <httpEndpoint id="defaultHttpEndpoint"
-                  host="*"
+                  host="0.0.0.0"
                   httpPort="9090"
                   httpsPort="9494" />
 
