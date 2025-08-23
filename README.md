@@ -96,4 +96,15 @@ Para detener el contenedor de Docker, puedes utilizar el siguiente comando:
 docker-compose down
 ```
 
+#para poner las variables de entorno en linux/mac con el archivo .env
+```bash
+    export $(cat .env | xargs)
+```
+
+#para windows con el archivo .env
+```bash
+Get-Content .env | ForEach-Object { $parts = $_ -split '='; set-item env:$($parts[0]) $parts[1] }
+```
+
+
 
