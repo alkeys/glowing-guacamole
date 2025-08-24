@@ -19,9 +19,9 @@
 
 
     <httpEndpoint id="defaultHttpEndpoint"
-                  host="0.0.0.0"
+                  host="*"
                   httpPort="9090"
-                  httpsPort="9494" />
+    />
 
     <basicRegistry id="basic" realm="BasicRealm" />
 
