@@ -48,7 +48,7 @@ public class Cliente {
     @JsonIgnore
     private List<Ticket> tickets;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario")
     private Usuario idUsuario;
 

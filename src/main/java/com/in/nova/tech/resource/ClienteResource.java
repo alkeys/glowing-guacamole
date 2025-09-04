@@ -7,6 +7,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 
 package com.in.nova.tech.resource;
 
+import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.ClienteDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
@@ -30,6 +31,8 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
 
     @Inject
     private ClientesBean clientesBean;
+    @Inject
+    private UsuarioBean usuarioBean;
 
     @Override
     protected AbstractDataPersistence<Cliente> getService() {
@@ -69,6 +72,11 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
             }
             dto.setTicketsId(ticketsid);
         }
+       try{
+           dto.setUsuarioId(entity.getIdUsuario().getId());
+       }catch (Exception ignored){
+
+       }
         dto.setId(entity.getId());
         dto.setCorreo(entity.getCorreo());
         dto.setNombreCompleto(entity.getNombreCompleto());
@@ -82,6 +90,7 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
             return null;
         }
         Cliente entity = new Cliente();
+        entity.setIdUsuario(usuarioBean.findById(dto.getUsuarioId()));
         entity.setId(dto.getId());
         entity.setCorreo(dto.getCorreo());
         entity.setNombreCompleto(dto.getNombreCompleto());

@@ -9,6 +9,7 @@ package com.in.nova.tech.controller;
 
 
 import com.in.nova.tech.entity.Cliente;
+import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -30,5 +31,12 @@ public class ClientesBean extends AbstractDataPersistence<Cliente> implements Se
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public Usuario findUsuarioById(Integer idUsuario) {
+        String jpql = "SELECT u FROM Usuario u WHERE u.id = :idUsuario";
+        return em.createQuery(jpql, Usuario.class)
+                .setParameter("idUsuario", idUsuario)
+                .getSingleResult();
     }
 }

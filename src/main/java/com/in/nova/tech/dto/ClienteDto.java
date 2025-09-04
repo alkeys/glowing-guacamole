@@ -25,9 +25,12 @@ import java.util.Map;
 public class ClienteDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer id;
+    private Integer usuarioId;
     private String nombreCompleto;
     private String correo;
     private String telefono;
+
+
 
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
