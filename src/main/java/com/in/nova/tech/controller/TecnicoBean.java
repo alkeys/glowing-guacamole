@@ -7,6 +7,7 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 
 package com.in.nova.tech.controller;
 import com.in.nova.tech.entity.Tecnico;
+import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -61,5 +62,13 @@ public class TecnicoBean extends AbstractDataPersistence<Tecnico> {
 
         em.clear(); // evitar entidades stale tras bulk update
         return afectados;
+    }
+
+    public Usuario findUsuarioById(Integer idUsuario) {
+        String jpql= "SELECT u FROM Usuario u WHERE u.id = :idUsuario";
+        return em.createQuery(jpql, Usuario.class)
+                .setParameter("idUsuario", idUsuario)
+                .getSingleResult();
+
     }
 }

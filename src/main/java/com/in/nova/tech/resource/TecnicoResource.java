@@ -52,6 +52,7 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
     @Override
     protected TecnicoDto toDto(Tecnico entity) {
         TecnicoDto dto = new TecnicoDto();
+        dto.setIdUsuario(entity.getIdUsuario().getId());
         dto.setId(entity.getId());
         dto.setEspecialidad(entity.getEspecialidad());
         dto.setNombreCompleto(entity.getNombreCompleto());
@@ -68,6 +69,7 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
     @Override
     protected Tecnico toEntity(TecnicoDto dto) {
         Tecnico entity = new Tecnico();
+        entity.setIdUsuario(tecnicoBean.findUsuarioById(dto.getIdUsuario()));
         entity.setId(dto.getId());
         entity.setEspecialidad(dto.getEspecialidad());
         entity.setNombreCompleto(dto.getNombreCompleto());
