@@ -73,7 +73,7 @@ docker build -t innovatechdb .
 Para ejecutar el contenedor de Docker que has creado, utiliza el siguiente comando:
 
 ```bash 
-docker run --name too_app -p 1000:1000 -p 9443:9443 innovatechdb
+docker run --name too_app -p 1000:9090 -p 9443:9443 innovatechdb
 ```
 # para parar el contenedor de Docker, puedes utilizar el siguiente comando:
 
