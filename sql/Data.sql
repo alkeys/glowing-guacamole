@@ -1,57 +1,61 @@
 -- ================================
--- INSERCIÓN DE DATOS DE EJEMPLO
+-- 1. USUARIOS
 -- ================================
-
--- Inserción de usuarios
--- Nota: La contraseña 'password123' está encriptada con un hash ficticio para fines de demostración.
 INSERT INTO usuarios (nombre_usuario, contrasena_hash, rol) VALUES
-('admin_user', 'hash_admin123', 'administrador'),
-('tecnico_juan', 'hash_tecnico_juan', 'tecnico'),
-('tecnico_maria', 'hash_tecnico_maria', 'tecnico'),
-('cliente_ana', 'hash_cliente_ana', 'cliente'),
-('cliente_pedro', 'hash_cliente_pedro', 'cliente');
+                                                                ('juancliente',  crypt('1234', gen_salt('bf')), 'cliente'),
+                                                                ('mariacliente', crypt('abcd', gen_salt('bf')), 'cliente'),
+                                                                ('tecnico1',     crypt('pass1', gen_salt('bf')), 'tecnico'),
+                                                                ('tecnico2',     crypt('pass2', gen_salt('bf')), 'tecnico'),
+                                                                ('admin1',       crypt('adminpass', gen_salt('bf')), 'administrador');
 
--- Inserción de tipos de servicio
-INSERT INTO tipos_servicio (nombre_tipo) VALUES
-('Hardware'),
-('Software'),
-('Redes'),
-('Soporte General');
-
--- Inserción de estados del ticket
-INSERT INTO estados_ticket (nombre_estado) VALUES
-('Abierto'),
-('En proceso'),
-('Cerrado');
-
--- Inserción de clientes
+-- ================================
+-- 2. CLIENTES
+-- ================================
 INSERT INTO clientes (id_usuario, nombre_completo, correo, telefono) VALUES
-(4, 'Ana García', 'ana.garcia@email.com', '555-1234'),
-(5, 'Pedro López', 'pedro.lopez@email.com', '555-5678');
+                                                                         (1, 'Juan Pérez',  'juan@example.com',  '555-1001'),
+                                                                         (2, 'María Gómez', 'maria@example.com', '555-1002');
 
--- Inserción de técnicos
+-- ================================
+-- 3. TÉCNICOS
+-- ================================
 INSERT INTO tecnicos (id_usuario, nombre_completo, especialidad, activo) VALUES
-(2, 'Juan Pérez', 'Hardware', TRUE),
-(3, 'María Rodríguez', 'Software', TRUE),
-(NULL, 'Carlos Sánchez', 'Redes', TRUE); -- Un técnico sin cuenta de usuario asociada
+                                                                             (3, 'Carlos López', 'Hardware', TRUE),
+                                                                             (4, 'Ana Martínez', 'Redes',   TRUE);
 
--- Inserción de tickets
-INSERT INTO tickets (id_cliente, id_tipo_servicio, fecha_solicitud, id_tecnico, id_estado, diagnostico) VALUES
-(1, 1, '2023-10-25', 1, 1, 'La computadora no enciende.'),
-(2, 2, '2023-10-26', 2, 2, 'El programa de contabilidad se cierra inesperadamente.'),
-(1, 3, '2023-10-27', 3, 2, 'No hay conexión a internet en mi oficina.'),
-(2, 4, '2023-10-28', NULL, 1, 'Necesito ayuda para instalar una impresora.');
+-- ================================
+-- 4. TIPOS DE SERVICIO
+-- ================================
+INSERT INTO tipos_servicio (nombre_tipo) VALUES
+                                             ('Hardware'),
+                                             ('Software'),
+                                             ('Redes');
 
--- Actualización de tickets para simular el cierre de uno
-UPDATE tickets
-SET id_estado = 3, fecha_asignacion = '2023-10-25', fecha_cierre = '2023-10-26', solucion = 'Se reemplazó la fuente de poder defectuosa.'
-WHERE id_ticket = 1;
+-- ================================
+-- 5. ESTADOS DEL TICKET
+-- ================================
+INSERT INTO estados_ticket (nombre_estado) VALUES
+                                               ('Abierto'),
+                                               ('En proceso'),
+                                               ('Cerrado');
 
--- Actualización de un ticket en proceso
-UPDATE tickets
-SET fecha_asignacion = '2023-10-26'
-WHERE id_ticket = 2;
+-- ================================
+-- 6. TICKETS
+-- ================================
+INSERT INTO tickets
+(id_cliente, id_tipo_servicio, fecha_solicitud, id_tecnico, id_estado,
+ fecha_asignacion, fecha_cierre, diagnostico, solucion)
+VALUES
+-- Ticket en proceso
+(1, 1, CURRENT_DATE - INTERVAL '5 days', 1, 2,
+ CURRENT_DATE - INTERVAL '4 days', NULL,
+ 'PC no enciende, posible fuente dañada', NULL),
 
-UPDATE tickets
-SET fecha_asignacion = '2023-10-27'
-WHERE id_ticket = 3;
+-- Ticket cerrado
+(2, 2, CURRENT_DATE - INTERVAL '10 days', 2, 3,
+ CURRENT_DATE - INTERVAL '9 days', CURRENT_DATE - INTERVAL '2 days',
+ 'Error de sistema operativo', 'Reinstalación completa de Windows 11'),
+
+-- Ticket abierto sin asignar técnico
+(1, 3, CURRENT_DATE, NULL, 1,
+ NULL, NULL,
+ 'Problemas de conectividad en red doméstica', NULL);
