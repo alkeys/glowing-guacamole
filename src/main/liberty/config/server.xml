@@ -55,6 +55,7 @@
     </library>
 
     <basicRegistry id="basic" realm="BasicRealm">
+        <user name="${SV_USER}" password="${SV_PASSWORD}"/>
         <group name="${SV_GROUP}">
             <member name="${SV_MEMBER}"/>
         </group>
