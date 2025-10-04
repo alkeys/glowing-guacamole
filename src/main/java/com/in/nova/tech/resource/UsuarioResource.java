@@ -108,14 +108,24 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
     @Consumes("application/json")
     public Response login(UsuarioDto credentials) {
         Usuario usuario = usuarioBean.findByNombreUsuario(credentials.getNombreUsuario());
+
         if (usuario == null) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"error\":\"Usuario o contraseña incorrecta\"}")
                     .build();
         }
+
+        // Bloque de depuración para verificar el rol
+        if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\":\"Error Crítico: El rol del usuario no se cargó desde la base de datos.\"}")
+                    .build();
+        }
+
         if (PasswordHashSeguro.checkPassword(credentials.getContrasena(), usuario.getContrasenaHash())) {
             String token = jwtUtil.generateToken(usuario);
-            return Response.ok("{\"token\":\"" + token + "\"}").build();
+            String responseJson = String.format("{\"token\":\"%s\"}", token);
+            return Response.ok(responseJson).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("{\"error\":\"Usuario o contraseña incorrecta\"}")

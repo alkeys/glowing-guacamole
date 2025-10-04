@@ -101,4 +101,5 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
     }
 
 
+    
 }

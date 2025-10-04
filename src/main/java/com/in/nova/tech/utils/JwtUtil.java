@@ -70,4 +70,11 @@ public class JwtUtil {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
+
+    public Claims validateToken(String token) {
+        if (secret == null || secret.isEmpty()) {
+            throw new IllegalStateException("La clave secreta JWT (JWT_SECRET_KEY) no está configurada en las variables de entorno.");
+        }
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
 }

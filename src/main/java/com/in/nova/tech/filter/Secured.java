@@ -4,6 +4,7 @@ Licencia: Creative Commons Attribution-NonCommercial 4.0 International
 Prohibido su uso con fines comerciales.
 Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
+
 package com.in.nova.tech.filter;
 
 import jakarta.ws.rs.NameBinding;
@@ -16,5 +17,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Secured {
-    String[] rolesAllowed() default {}; // Permite especificar roles permitidos para acceso restringido
+    String[] rolesAllowed() default {};
 }
