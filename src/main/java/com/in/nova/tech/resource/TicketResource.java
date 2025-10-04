@@ -147,13 +147,6 @@ public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Inte
 
 
 
-    /*
-     * Crear ticket con asignación automática de técnico
-     * 
-     */
-    @POST
-    @Path("/crear-con-asignacion")
-    public TicketDto crearTicketConAsignacion() {
 
 
 
