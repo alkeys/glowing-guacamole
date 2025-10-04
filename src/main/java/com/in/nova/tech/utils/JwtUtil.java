@@ -6,72 +6,61 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 package com.in.nova.tech.utils;
 
+import com.in.nova.tech.entity.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.enterprise.context.ApplicationScoped;
-
-import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @ApplicationScoped
 public class JwtUtil {
 
-    // Clave secreta para firmar el JWT
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    // Tiempo de expiración del token (10 horas)
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 horas
+    private String secret = "secretkey"; // Deberías externalizar esto
 
-    // Genera un token JWT para un usuario dado
-    public String generateToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
-
-    // Crea el token JWT con los claims y el sujeto especificado
-    private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SECRET_KEY)
-                .compact();
-    }
-
-    // Valida si el token es válido y corresponde al usuario
-    public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
-    }
-
-    // Extrae el nombre de usuario (subject) del token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extrae la fecha de expiración del token
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Extrae un claim específico del token usando una función
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Extrae todos los claims del token
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    // Verifica si el token ha expirado
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    public String generateToken(Usuario usuario) {
+        Claims claims = Jwts.claims().setSubject(usuario.getNombreUsuario());
+        claims.put("role", usuario.getRol()); // Añadimos el rol aquí también para tenerlo en el token si es necesario luego 
+        return createToken(claims);
+    }
+
+    private String createToken(Claims claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public Boolean validateToken(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 }

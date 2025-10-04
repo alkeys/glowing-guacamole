@@ -16,4 +16,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Secured {
+    String[] rolesAllowed() default {}; // Permite especificar roles permitidos para acceso restringido
 }
