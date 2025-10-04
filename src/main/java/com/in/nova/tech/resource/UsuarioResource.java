@@ -128,7 +128,7 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
 
     @GET
     @Path("/listar")
-    @Secured(rolesAllowed = {"administrador"})
+    @Secured(rolesAllowed = {"administrador"}) // Solo el rol 'administrador' puede listar usuarios
     public Response listAllUsers() {
         // Delega la llamada al método 'listar' de la clase padre.
         return super.listar();
@@ -171,7 +171,37 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
 
 
 
+   //esto es para probar el filtro de seguridad
+ 
+    @Override
+    @GET
+    @Secured(rolesAllowed = {"administrador"})
+    public Response listar() {
+        return super.listar();
+    }
 
+    @Override
+    @POST
+    @Secured(rolesAllowed = {"administrador"})
+    public Response crear(UsuarioDto dto, @Context UriInfo uriInfo) {
+        return super.crear(dto, uriInfo);
+    }
+    
+    @Override
+    @PUT
+    @Path("/actualizar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response actualizar(@PathParam("id") Integer id, UsuarioDto dto) {
+        return super.actualizar(id, dto);
+    }
+
+    @Override
+    @DELETE
+    @Path("/eliminar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response eliminar(@PathParam("id") Integer id) {
+        return super.eliminar(id);
+    }   
 
 
 
