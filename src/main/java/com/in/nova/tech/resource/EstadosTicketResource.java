@@ -11,6 +11,8 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.EstadosTicketBean;
 import com.in.nova.tech.dto.EstadosTicketDto;
 import com.in.nova.tech.entity.EstadosTicket;
+import com.in.nova.tech.filter.Secured;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -20,6 +22,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
         @Tag(name = "Estados de Ticket", description = "Operaciones relacionadas con los estados de los tickets, incluyendo CRUD y gestión de datos.")
 })
+@Secured
 public class EstadosTicketResource extends AbstractCrudResource<EstadosTicket, EstadosTicketDto,Integer> {
 
     @Inject

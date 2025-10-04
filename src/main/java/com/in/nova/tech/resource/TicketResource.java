@@ -10,6 +10,8 @@ package com.in.nova.tech.resource;
 import com.in.nova.tech.controller.*;
 import com.in.nova.tech.dto.TicketDto;
 import com.in.nova.tech.entity.*;
+import com.in.nova.tech.filter.Secured;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -21,6 +23,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
     @Tag(name = "Gestion de Rest Ticket", description = "Operaciones relacionadas con los tickets, incluyendo CRUD y gestión de datos.")
 })
+@Secured
 public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Integer> {
 
    @Inject

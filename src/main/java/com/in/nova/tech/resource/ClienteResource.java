@@ -11,6 +11,7 @@ import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.ClienteDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
+import com.in.nova.tech.filter.Secured;
 import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Tags(value = {
     @Tag(name = "Gestion de Rest Cliente", description = "Operaciones relacionadas con los clientes esto incluye CRUD y gestión de datos."),
 })
+@Secured
 public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Integer> {
 
     @Inject

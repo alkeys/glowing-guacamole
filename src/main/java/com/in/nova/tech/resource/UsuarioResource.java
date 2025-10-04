@@ -1,15 +1,21 @@
+/*
+Copyright (c) 2025 Alexander Aviles
+Licencia: Creative Commons Attribution-NonCommercial 4.0 International
+Prohibido su uso con fines comerciales.
+Ver: https://creativecommons.org/licenses/by-nc/4.0/
+*/
 package com.in.nova.tech.resource;
 import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Usuario;
+import com.in.nova.tech.utils.JwtUtil;
 import com.in.nova.tech.utils.PasswordHashSeguro;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import lombok.Getter;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
@@ -24,6 +30,9 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
 
     @Inject
     private UsuarioBean usuarioBean;
+
+    @Inject
+    private JwtUtil jwtUtil;
 
 
     @Override
@@ -98,11 +107,14 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
         }
         // Verificar la contraseña
         String hashed = usuario.getContrasenaHash();
-        return PasswordHashSeguro.checkPassword(contrasena, hashed) ?
-                Response.ok(toDto(usuario)).build() :
-                Response.status(Response.Status.UNAUTHORIZED)
-                        .entity("{\"error\":\"Contraseña incorrecta\"}")
-                        .build();
+        if (PasswordHashSeguro.checkPassword(contrasena, hashed)) {
+            String token = jwtUtil.generateToken(usuario.getNombreUsuario());
+            return Response.ok("{\"token\":\"" + token + "\"}").build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("{\"error\":\"Contraseña incorrecta\"}")
+                    .build();
+        }
     }
 
 

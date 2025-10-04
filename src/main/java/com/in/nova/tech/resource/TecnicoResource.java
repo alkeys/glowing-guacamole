@@ -11,6 +11,8 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.TecnicoBean;
 import com.in.nova.tech.dto.TecnicoDto;
 import com.in.nova.tech.entity.Tecnico;
+import com.in.nova.tech.filter.Secured;
+
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.DELETE;
@@ -25,6 +27,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
     @Tag(name = "Técnicos", description = "Operaciones relacionadas con los técnicos, incluyendo CRUD y gestión de datos.")
 })
+@Secured
 public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,Integer> {
 
     @Inject

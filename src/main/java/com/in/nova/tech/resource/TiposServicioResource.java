@@ -5,6 +5,8 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.TiposServicioBean;
 import com.in.nova.tech.dto.TiposServicioDto;
 import com.in.nova.tech.entity.TiposServicio;
+import com.in.nova.tech.filter.Secured;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -14,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
         @Tag(name = "Tipos de Servicio", description = "Operaciones relacionadas con los tipos de servicio, incluyendo CRUD y gestión de datos.")
 })
+@Secured
 public class TiposServicioResource extends AbstractCrudResource<TiposServicio, TiposServicioDto,Integer> {
 
     @Inject
