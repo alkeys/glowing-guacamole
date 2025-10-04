@@ -14,6 +14,7 @@ import com.in.nova.tech.entity.Tecnico;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
@@ -123,9 +124,17 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
     }
 
 
-    /** metodo para asignar ordenes de trabajo a un tecnicos automaticamente a la que tenga menos ordenes de trabajo
+    /*
+     * obtiene una lista de tecnicos activos con menos tickets asignados, opcionalmente filtrados por especialidad
      */
-
+    @Transactional
+    @GET
+    @Path("/conMenosTickets/{especialidad}")
+    public Response tecnicosConMenosTickets(@PathParam("especialidad") String especialidad) {
+        var tecnicos = tecnicoBean.tecnicosActivosConMenosTickets(especialidad);
+        var dtos = tecnicos.stream().map(this::toDto).toList();
+        return Response.ok(dtos).build();
+    }
 
 
 

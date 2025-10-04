@@ -11,6 +11,7 @@ import com.in.nova.tech.controller.*;
 import com.in.nova.tech.dto.TicketDto;
 import com.in.nova.tech.entity.*;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
@@ -143,4 +144,18 @@ public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Inte
 
         return ticket;
     }
+
+
+
+    /*
+     * Crear ticket con asignación automática de técnico
+     * 
+     */
+    @POST
+    @Path("/crear-con-asignacion")
+    public TicketDto crearTicketConAsignacion() {
+
+
+
+
 }

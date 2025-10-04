@@ -6,6 +6,8 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 
 package com.in.nova.tech.controller;
+import java.util.List;
+
 import com.in.nova.tech.entity.Tecnico;
 import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
@@ -71,4 +73,39 @@ public class TecnicoBean extends AbstractDataPersistence<Tecnico> {
                 .getSingleResult();
 
     }
+
+
+
+
+/**
+ * Recupera una lista de técnicos activos ("Tecnico") que tienen la menor cantidad de tickets asignados,
+ * opcionalmente filtrados por una especialidad dada.
+ * <p>
+ * El resultado se ordena primero por la cantidad de tickets asignados a cada técnico (ascendente),
+ * y luego por el ID del técnico (ascendente) para desempatar.
+ * </p>
+ *
+ * @param especialidad la especialidad por la cual filtrar los técnicos; si {@code null}, se incluyen todas las especialidades
+ * @return una lista de técnicos activos con menos tickets, opcionalmente filtrados por especialidad
+ */
+    public List<Tecnico> tecnicosActivosConMenosTickets(String especialidad) {
+        String jpql =
+                "SELECT t " +
+                        "FROM Tecnico t " +
+                        "LEFT JOIN Ticket tk ON tk.idTecnico = t " +
+                        "WHERE t.activo = TRUE " +
+                        (especialidad != null ? "AND t.especialidad = :especialidad " : "") +
+                        "GROUP BY t.id " +
+                        "ORDER BY COUNT(tk.id) ASC, t.id ASC ";
+
+        var query = em.createQuery(jpql, Tecnico.class);
+        if (especialidad != null) {
+            query.setParameter("especialidad", especialidad);
+        }
+        return query.getResultList();
+
+    }
+
+
+
 }
