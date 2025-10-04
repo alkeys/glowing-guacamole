@@ -28,20 +28,20 @@
     <dataSource id="defaultDataSource" jndiName="jdbc/Innova" type="javax.sql.DataSource">
         <jdbcDriver libraryRef="postgresql-library"/>
 
-     <!-- <properties.postgresql
+     <properties.postgresql
                 user="${env.DB_USER}"
                 password="${env.DB_PASSWORD}"
                 databaseName="${env.DB_NAME}"
                 serverName="${env.DB_HOST}"
-                portNumber="6543"/>  -->
+                portNumber="6543"/>  
 
     <!--   para conexion local -->
-         <properties.postgresql
+         <!-- <properties.postgresql
                 user="admin"
                 password="admin"
                 databaseName="innovaTech"
                 serverName="localhost"
-                portNumber="5432"/>
+                portNumber="5432"/> -->
 
 
 

@@ -9,13 +9,21 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Usuario;
+import com.in.nova.tech.filter.Secured;
 import com.in.nova.tech.utils.JwtUtil;
 import com.in.nova.tech.utils.PasswordHashSeguro;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
@@ -95,27 +103,74 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
     }
 
 
-
-    @GET
-    @Path("/Login/{nombreUSer}/{contrasena}")
-    public Response login(@PathParam("nombreUSer") String nombreUser,@PathParam("contrasena") String contrasena) {
-        Usuario usuario = usuarioBean.findByNombreUsuario(nombreUser);
+    @POST
+    @Path("/login")
+    @Consumes("application/json")
+    public Response login(UsuarioDto credentials) {
+        Usuario usuario = usuarioBean.findByNombreUsuario(credentials.getNombreUsuario());
         if (usuario == null) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"error\":\"Usuario no encontrado\"}")
+                    .entity("{\"error\":\"Usuario o contraseña incorrecta\"}")
                     .build();
         }
-        // Verificar la contraseña
-        String hashed = usuario.getContrasenaHash();
-        if (PasswordHashSeguro.checkPassword(contrasena, hashed)) {
-            String token = jwtUtil.generateToken(usuario.getNombreUsuario());
+        if (PasswordHashSeguro.checkPassword(credentials.getContrasena(), usuario.getContrasenaHash())) {
+            String token = jwtUtil.generateToken(usuario);
             return Response.ok("{\"token\":\"" + token + "\"}").build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("{\"error\":\"Contraseña incorrecta\"}")
+                    .entity("{\"error\":\"Usuario o contraseña incorrecta\"}")
                     .build();
         }
     }
+
+
+    // --- Endpoints Protegidos ---
+
+    @GET
+    @Path("/listar")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response listAllUsers() {
+        // Delega la llamada al método 'listar' de la clase padre.
+        return super.listar();
+    }
+
+    @GET
+    @Path("/obtener/{id}")
+    @Secured(rolesAllowed = {"administrador", "cliente", "tecnico"})
+    public Response getUserById(@PathParam("id") Integer id) {
+        // Delega la llamada al método 'obtenerPorId' de la clase padre.
+        return super.obtenerPorId(id);
+    }
+
+    @POST
+    @Path("/crear")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response createUser(UsuarioDto dto, @Context UriInfo uriInfo) {
+         if (dto.getRol() == null || dto.getRol().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"El rol es obligatorio\"}").build();
+        }
+        // Delega la llamada al método 'crear' de la clase padre.
+        return super.crear(dto, uriInfo);
+    }
+
+    @PUT
+    @Path("/actualizar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response updateUser(@PathParam("id") Integer id, UsuarioDto dto) {
+        // Delega la llamada al método 'actualizar' de la clase padre.
+        return super.actualizar(id, dto);
+    }
+
+    @DELETE
+    @Path("/eliminar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response deleteUser(@PathParam("id") Integer id) {
+        // Delega la llamada al método 'eliminar' de la clase padre.
+        return super.eliminar(id);
+    }
+
+
+
 
 
 
