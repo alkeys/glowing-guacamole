@@ -102,8 +102,7 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
         return entity;
     }
 
-
-    @POST
+  @POST
     @Path("/login")
     @Consumes("application/json")
     public Response login(UsuarioDto credentials) {
@@ -124,7 +123,7 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
 
         if (PasswordHashSeguro.checkPassword(credentials.getContrasena(), usuario.getContrasenaHash())) {
             String token = jwtUtil.generateToken(usuario);
-            String responseJson = String.format("{\"token\":\"%s\"}", token);
+            String responseJson = String.format("{\"token\":\"%s\", \"rol_cargado\":\"%s\", \"userId\":%d}", token, usuario.getRol(), usuario.getId());
             return Response.ok(responseJson).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)
@@ -132,6 +131,7 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
                     .build();
         }
     }
+
 
 
     // --- Endpoints Protegidos ---
