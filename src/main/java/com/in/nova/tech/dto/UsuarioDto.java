@@ -19,7 +19,7 @@ public class UsuarioDto implements Serializable {
 
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer idUsuario; // ID del usuario asociado
+    private Integer idCliente; // ID del cliente asociado
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer idTecnico; // ID del técnico asociado

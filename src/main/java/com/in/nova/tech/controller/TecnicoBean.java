@@ -108,4 +108,13 @@ public class TecnicoBean extends AbstractDataPersistence<Tecnico> {
 
 
 
+    public Tecnico findTecnicoByIdUsuario(Integer idUsuario) {
+        String jpql = "SELECT t FROM Tecnico t WHERE t.idUsuario.id = :idUsuario";
+        return em.createQuery(jpql, Tecnico.class)
+                .setParameter("idUsuario", idUsuario)
+                .getSingleResult();
+    }
+
+
+
 }

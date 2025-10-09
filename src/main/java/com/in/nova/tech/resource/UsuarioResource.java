@@ -6,6 +6,8 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 package com.in.nova.tech.resource;
 import com.in.nova.tech.controller.AbstractDataPersistence;
+import com.in.nova.tech.controller.ClientesBean;
+import com.in.nova.tech.controller.TecnicoBean;
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Usuario;
@@ -39,6 +41,12 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
     @Inject
     private UsuarioBean usuarioBean;
 
+    @Inject 
+    private ClientesBean clientesBean;
+
+    @Inject
+    private TecnicoBean tecnicoBean;
+    
     @Inject
     private JwtUtil jwtUtil;
 
@@ -63,21 +71,13 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
         dto.setId(entity.getId());
         dto.setNombreUsuario(entity.getNombreUsuario());
         dto.setRol(entity.getRol());
-        try {
-            dto.setIdUsuario(entity.getCliente().getIdUsuario().getId());
-            dto.setNombreCompleto(entity.getCliente().getNombreCompleto());
-        } catch (Exception e) {
-            dto.setIdUsuario(null);
-            dto.setNombreCompleto(null);
+        // Asignar idCliente e idTecnico si existen
+        if (entity.getCliente() != null) {
+            dto.setIdCliente(entity.getCliente().getId());
         }
-        try {
+        if (entity.getTecnico() != null) {
             dto.setIdTecnico(entity.getTecnico().getId());
-            dto.setNombreCompleto(entity.getTecnico().getNombreCompleto());
-        } catch (Exception e) {
-            dto.setIdTecnico(null);
-            dto.setNombreCompleto(null);
         }
-
         return dto;
     }
 
@@ -123,7 +123,12 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
 
         if (PasswordHashSeguro.checkPassword(credentials.getContrasena(), usuario.getContrasenaHash())) {
             String token = jwtUtil.generateToken(usuario);
-            String responseJson = String.format("{\"token\":\"%s\", \"rol_cargado\":\"%s\", \"userId\":%d}", token, usuario.getRol(), usuario.getId());
+            String tecnicoJson = usuario.getTecnico() != null ? usuario.getTecnico().toJson() : "null";
+            String clienteJson = usuario.getCliente() != null ? usuario.getCliente().toJson() : "null";
+            String responseJson = String.format(
+                "{\"token\":\"%s\", \"rol_cargado\":\"%s\", \"userId\":%d, \"tecnico\":%s, \"cliente\":%s}",
+                token, usuario.getRol(), usuario.getId(), tecnicoJson, clienteJson
+            );
             return Response.ok(responseJson).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED)

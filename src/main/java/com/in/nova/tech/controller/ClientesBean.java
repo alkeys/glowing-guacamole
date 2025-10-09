@@ -39,4 +39,14 @@ public class ClientesBean extends AbstractDataPersistence<Cliente> implements Se
                 .setParameter("idUsuario", idUsuario)
                 .getSingleResult();
     }
+
+    public Cliente findClienteByIdUsuario(Integer idUsuario) {
+        String jpql = "SELECT c FROM Cliente c WHERE c.idUsuario.id = :idUsuario";
+        return em.createQuery(jpql, Cliente.class)
+                .setParameter("idUsuario", idUsuario)
+                .getSingleResult();
+    }
+
+
+
 }

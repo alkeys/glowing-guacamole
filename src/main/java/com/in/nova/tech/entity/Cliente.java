@@ -52,4 +52,34 @@ public class Cliente {
     @JoinColumn(name = "id_usuario")
     private Usuario idUsuario;
 
+
+       public String toJson(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append("\"id\":").append(id == null ? "null" : id).append(",");
+        sb.append("\"nombreCompleto\":")
+                .append(nombreCompleto == null ? "null" : "\"" + escapeJson(nombreCompleto) + "\"")
+                .append(",");
+        sb.append("\"correo\":")
+                .append(correo == null ? "null" : "\"" + escapeJson(correo) + "\"")
+                .append(",");
+        sb.append("\"telefono\":")
+                .append(telefono == null ? "null" : "\"" + escapeJson(telefono) + "\"")
+                .append(",");
+        sb.append("\"idUsuario\":").append(idUsuario == null ? "null" : idUsuario.getId());
+        sb.append("}");
+        return sb.toString();
+       }
+
+       private String escapeJson(String value) {
+           if (value == null) return null;
+           return value.replace("\\", "\\\\")
+                       .replace("\"", "\\\"")
+                       .replace("\b", "\\b")
+                       .replace("\f", "\\f")
+                       .replace("\n", "\\n")
+                       .replace("\r", "\\r")
+                       .replace("\t", "\\t");
+       }
+
 }
