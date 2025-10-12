@@ -67,13 +67,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
             if (isSecured(method)) {
                 List<String> rolesAllowed = getRolesAllowed(method.getAnnotation(Secured.class));
-                if (rolesAllowed.isEmpty() || !rolesAllowed.contains(rol)) {
+                if (!rolesAllowed.isEmpty() && !rolesAllowed.contains(rol)) {
                     abortWithUnauthorized(requestContext, "El usuario no tiene los permisos necesarios. 1 " + rol);
                     return;
                 }
             } else if (isSecured(resourceClass)) {
                 List<String> rolesAllowed = getRolesAllowed(resourceClass.getAnnotation(Secured.class));
-                if (rolesAllowed.isEmpty() || !rolesAllowed.contains(rol)) {
+                if (!rolesAllowed.isEmpty() && !rolesAllowed.contains(rol)) {
                     abortWithUnauthorized(requestContext, "El usuario no tiene los permisos necesarios. 2 " + rol);
                     return;
                 }
