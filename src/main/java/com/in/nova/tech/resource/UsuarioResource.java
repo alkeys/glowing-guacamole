@@ -102,7 +102,7 @@ public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, I
         return entity;
     }
 
-  @POST
+    @POST
     @Path("/login")
     @Consumes("application/json")
     public Response login(UsuarioDto credentials) {

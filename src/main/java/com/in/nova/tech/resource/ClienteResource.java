@@ -9,10 +9,21 @@ package com.in.nova.tech.resource;
 
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.ClienteDto;
+import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
 import com.in.nova.tech.filter.Secured;
+
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 import com.in.nova.tech.controller.AbstractDataPersistence;
@@ -28,7 +39,7 @@ import java.util.Map;
 @Tags(value = {
     @Tag(name = "Gestion de Rest Cliente", description = "Operaciones relacionadas con los clientes esto incluye CRUD y gestión de datos."),
 })
-@Secured
+ // Aplica el filtro de seguridad a todos los métodos de este recurso esto requiere autenticación y autorización tipo Bearer
 public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Integer> {
 
     @Inject
@@ -99,6 +110,90 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
         entity.setTelefono(dto.getTelefono());
         return entity;
     }
+
+    @GET
+    @Path("/listar")
+    @Secured(rolesAllowed = {"administrador"}) // Solo el rol 'administrador' puede listar usuarios
+    public Response listAllUsers() {
+        // Delega la llamada al método 'listar' de la clase padre.
+        return super.listar();
+    }
+
+    @GET
+    @Path("/obtener/{id}")
+    @Secured(rolesAllowed = {"administrador", "cliente", "tecnico"})
+    public Response getUserById(@PathParam("id") Integer id) {
+        // Delega la llamada al método 'obtenerPorId' de la clase padre.
+        return super.obtenerPorId(id);
+    }
+
+    @POST
+    @Path("/crear")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response createUser(ClienteDto dto, @Context UriInfo uriInfo) {
+        // Delega la llamada al método 'crear' de la clase padre.
+        return super.crear(dto, uriInfo);
+    }
+
+    @PUT
+    @Path("/actualizar/{id}")
+    @Secured(rolesAllowed = {"administrador", "cliente"})
+    public Response updateUser(@PathParam("id") Integer id, ClienteDto dto) {
+        // Delega la llamada al método 'actualizar' de la clase padre.
+        return super.actualizar(id, dto);
+    }
+
+    @DELETE
+    @Path("/eliminar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response deleteUser(@PathParam("id") Integer id) {
+        // Delega la llamada al método 'eliminar' de la clase padre.
+        return super.eliminar(id);
+    }
+
+
+      @Override
+    @GET
+    @Secured(rolesAllowed = {"administrador"})
+    public Response listar() {
+        return super.listar();
+    }
+
+    @Override
+    @POST
+    @Secured(rolesAllowed = {"administrador"})
+    public Response crear(ClienteDto dto, @Context UriInfo uriInfo) {
+        return super.crear(dto, uriInfo);
+    }
+    
+    @Override
+    @PUT
+    @Path("/actualizar/{id}")
+    @Secured(rolesAllowed = {"administrador", "cliente"})
+    public Response actualizar(@PathParam("id") Integer id, ClienteDto dto) {
+        return super.actualizar(id, dto);
+    }
+
+    @Override
+    @DELETE
+    @Path("/eliminar/{id}")
+    @Secured(rolesAllowed = {"administrador"})
+    public Response eliminar(@PathParam("id") Integer id) {
+        return super.eliminar(id);
+    }   
+
+
+
+    
+
+
+
+
+    
+
+
+
+
 
 
     
