@@ -23,27 +23,20 @@
     <!-- ================================
          DataSource PostgreSQL
          ================================ -->
-    <dataSource id="defaultDataSource" jndiName="jdbc/Innova" type="javax.sql.DataSource">
-        <jdbcDriver libraryRef="postgresql-library"/>
+<dataSource id="InnovaDataSource" jndiName="jdbc/Innova" type="javax.sql.DataSource">
+    <jdbcDriver libraryRef="postgresql-library"/>
+    <properties.postgresql
+        user="${env.DB_USER}"
+        password="${env.DB_PASSWORD}"
+        databaseName="${env.DB_NAME}"
+        serverName="${env.DB_HOST}"
+        portNumber="6543"/>
+    <connectionManager maxPoolSize="100"
+                       minPoolSize="10"
+                       maxIdleTime="300s"
+                       connectionTimeout="30s"/>
+</dataSource>
 
-        <properties.postgresql
-                user="${env.DB_USER}"
-                password="${env.DB_PASSWORD}"
-                databaseName="${env.DB_NAME}"
-                serverName="${env.DB_HOST}"
-                portNumber="${env.DB_PORT}"
-                prepareThreshold="3"
-                binaryTransfer="true"/>
-
-
-                
-
-        <!-- Pool optimizado para concurrencia y velocidad -->
-        <connectionManager maxPoolSize="100"
-                           minPoolSize="10"
-                           maxIdleTime="300s"
-                           connectionTimeout="30s"/>
-    </dataSource>
 
     <!-- ================================
          JDBC Library
@@ -67,8 +60,3 @@
     </administrator-role>
 
 </server>
-
-    
-
-
-
