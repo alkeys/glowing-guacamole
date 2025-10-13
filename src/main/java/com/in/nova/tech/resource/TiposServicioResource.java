@@ -16,7 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
         @Tag(name = "Tipos de Servicio", description = "Operaciones relacionadas con los tipos de servicio, incluyendo CRUD y gestión de datos.")
 })
-@Secured
+
 public class TiposServicioResource extends AbstractCrudResource<TiposServicio, TiposServicioDto,Integer> {
 
     @Inject

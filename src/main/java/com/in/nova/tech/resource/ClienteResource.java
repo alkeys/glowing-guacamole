@@ -39,7 +39,6 @@ import java.util.Map;
 @Tags(value = {
     @Tag(name = "Gestion de Rest Cliente", description = "Operaciones relacionadas con los clientes esto incluye CRUD y gestión de datos."),
 })
-@Secured
  // Aplica el filtro de seguridad a todos los métodos de este recurso esto requiere autenticación y autorización tipo Bearer
 public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Integer> {
 

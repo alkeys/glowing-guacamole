@@ -22,7 +22,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
         @Tag(name = "Estados de Ticket", description = "Operaciones relacionadas con los estados de los tickets, incluyendo CRUD y gestión de datos.")
 })
-@Secured
 public class EstadosTicketResource extends AbstractCrudResource<EstadosTicket, EstadosTicketDto,Integer> {
 
     @Inject

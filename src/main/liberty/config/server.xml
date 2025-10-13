@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="Server configuration for PostgreSQL connection">
 
+    <!-- ================================
+         Features de Jakarta EE & MicroProfile
+         ================================ -->
     <featureManager>
         <feature>jakartaee-10.0</feature>
         <feature>microProfile-7.0</feature>
         <feature>mpOpenAPI-4.0</feature>
         <feature>mpHealth-4.0</feature>
-        <!-- Persistencia -->
         <feature>persistence-3.1</feature>
-         <feature>adminCenter-1.0</feature>
+        <feature>adminCenter-1.0</feature>
     </featureManager>
 
-<!--    <keyStore id="defaultKeyStore"
-              location="${server.config.dir}/resources/security/innova-local.p12"
-              type="PKCS12"
-              password="SuperPass123"/>
-    <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" keyAlias="appkey"/>-->
-
-
-
+    <!-- ================================
+         HTTP Endpoint
+         ================================ -->
     <httpEndpoint id="defaultHttpEndpoint"
                   host="*"
-                  httpPort="9090"
-    />
+                  httpPort="9090"/>
 
-
+    <!-- ================================
+         DataSource PostgreSQL
+         ================================ -->
     <dataSource id="defaultDataSource" jndiName="jdbc/Innova" type="javax.sql.DataSource">
         <jdbcDriver libraryRef="postgresql-library"/>
 
-     <properties.postgresql
+        <properties.postgresql
                 user="${env.DB_USER}"
                 password="${env.DB_PASSWORD}"
                 databaseName="${env.DB_NAME}"
                 serverName="${env.DB_HOST}"
-                portNumber="6543"/>  
-
-    <!--   para conexion local -->
-         <!-- <properties.postgresql
-                user="admin"
-                password="admin"
-                databaseName="innovaTech"
-                serverName="localhost"
-                portNumber="5432"/> -->
+                portNumber="${env.DB_PORT}"
+                prepareThreshold="3"
+                binaryTransfer="true"/>
 
 
+                
 
-
-        <!-- Pool esto sirver apara las maxima conexion funciona muy bien con supabase -->
-         <connectionManager maxPoolSize="10" minPoolSize="2" maxIdleTime="400s"/>
+        <!-- Pool optimizado para concurrencia y velocidad -->
+        <connectionManager maxPoolSize="100"
+                           minPoolSize="10"
+                           maxIdleTime="300s"
+                           connectionTimeout="30s"/>
     </dataSource>
 
+    <!-- ================================
+         JDBC Library
+         ================================ -->
     <library id="postgresql-library">
         <file name="${server.config.dir}/postgresql-42.7.6.jar"/>
     </library>
 
+    <!-- ================================
+         Seguridad básica
+         ================================ -->
     <basicRegistry id="basic" realm="BasicRealm">
         <user name="${SV_USER}" password="${SV_PASSWORD}"/>
         <group name="${SV_GROUP}">
@@ -62,8 +63,12 @@
     </basicRegistry>
 
     <administrator-role>
-    <user>${SV_USER}</user>
+        <user>${SV_USER}</user>
     </administrator-role>
 
-
 </server>
+
+    
+
+
+

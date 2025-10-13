@@ -42,13 +42,13 @@ public class Cliente {
     private String telefono;
 
 
-    @OneToMany(mappedBy = "idCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference(value = "cliente-tickets")
     @JsonProperty
     @JsonIgnore
     private List<Ticket> tickets;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario")
     private Usuario idUsuario;
 

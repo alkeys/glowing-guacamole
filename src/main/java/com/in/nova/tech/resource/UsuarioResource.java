@@ -27,7 +27,6 @@ import static com.in.nova.tech.utils.PasswordHashSeguro.hashPassword;
 @Tags(value = {
         @Tag(name = "Usuarios", description = "Operaciones relacionadas con los usuarios, incluyendo CRUD y gestión de datos.")
 })
-@Secured
 public class UsuarioResource extends AbstractCrudResource<Usuario, UsuarioDto, Integer> {
 
     @Inject

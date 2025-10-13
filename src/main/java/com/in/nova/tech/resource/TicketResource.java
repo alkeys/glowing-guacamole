@@ -23,7 +23,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
     @Tag(name = "Gestion de Rest Ticket", description = "Operaciones relacionadas con los tickets, incluyendo CRUD y gestión de datos.")
 })
-@Secured
 public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Integer> {
 
    @Inject

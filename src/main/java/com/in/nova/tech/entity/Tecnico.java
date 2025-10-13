@@ -36,7 +36,7 @@ public class Tecnico {
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario")
     private Usuario idUsuario;
 

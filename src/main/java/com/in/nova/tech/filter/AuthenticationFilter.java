@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2025 Alexander Aviles
-Licencia: Creative Commons Attribution-NonCommercial 4.0 International
-Prohibido su uso con fines comerciales.
-Ver: https://creativecommons.org/licenses/by-nc/4.0/
-*/
 package com.in.nova.tech.filter;
 
 import com.in.nova.tech.utils.JwtUtil;
@@ -22,6 +16,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,14 +45,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
 
         try {
+            // Validar token y extraer claims
             Claims claims = jwtUtil.validateToken(token);
-            String rol = claims.get("role", String.class);
 
-            if (rol == null || rol.isEmpty()) {
-                abortWithUnauthorized(requestContext, "El token no contiene un rol válido.");
-                return;
-            }
-
+            // Token válido → continuar con la solicitud
         } catch (ExpiredJwtException e) {
             abortWithUnauthorized(requestContext, "El token ha expirado.");
         } catch (SignatureException e) {
@@ -69,12 +60,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (IllegalArgumentException e) {
             abortWithUnauthorized(requestContext, "Argumento inválido al procesar el token.");
         } catch (IllegalStateException e) {
+            // Error en la configuración (secret nulo)
             LOGGER.log(Level.SEVERE, "Error de configuración del servidor: " + e.getMessage());
-            requestContext.abortWith(
-                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\":\"Error interno del servidor.\"}")
-                    .build());
+            abortWithUnauthorized(requestContext, "Error interno de autenticación.");
         } catch (Exception e) {
+            // Error inesperado, loguear pero no abortar con 500
             LOGGER.log(Level.SEVERE, "Error inesperado durante la validación del token", e);
             abortWithUnauthorized(requestContext, "Error inesperado al procesar el token.");
         }
@@ -82,9 +72,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext, String message) {
         requestContext.abortWith(
-            Response.status(Response.Status.UNAUTHORIZED)
-                .header("Content-Type", "application/json")
-                .entity(String.format("{\"error\":\"%s\"}", message))
-                .build());
+                Response.status(Response.Status.UNAUTHORIZED)
+                        .header("Content-Type", "application/json")
+                        .entity(String.format("{\"error\":\"%s\"}", message))
+                        .build()
+        );
     }
 }

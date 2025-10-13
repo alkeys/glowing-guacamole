@@ -27,7 +27,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 @Tags(value = {
     @Tag(name = "Técnicos", description = "Operaciones relacionadas con los técnicos, incluyendo CRUD y gestión de datos.")
 })
-@Secured
 public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,Integer> {
 
     @Inject
