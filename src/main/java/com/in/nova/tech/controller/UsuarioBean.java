@@ -4,6 +4,7 @@ import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 
@@ -23,13 +24,15 @@ public class UsuarioBean extends AbstractDataPersistence<Usuario>  implements Se
         super(Usuario.class);
     }
 
-    public Usuario findByNombreUsuario(String nombreUsuario) {
+ public Usuario findByNombreUsuario(String nombreUsuario) {
         try {
-            return em.createQuery("SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario", Usuario.class)
+            return em.createQuery("SELECT u FROM Usuario u LEFT JOIN FETCH u.cliente LEFT JOIN FETCH u.tecnico WHERE u.nombreUsuario = :nombreUsuario", Usuario.class)
                     .setParameter("nombreUsuario", nombreUsuario)
                     .getSingleResult();
-        } catch (Exception e) {
-            return null; // o lanzar una excepción personalizada si es necesario
+        } catch (NoResultException e) {
+            return null; 
         }
     }
+
+    
 }
