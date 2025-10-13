@@ -22,9 +22,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,24 +58,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 return;
             }
 
-            // Comprobar la anotación @Secured en el método y luego en la clase
-            Method method = resourceInfo.getResourceMethod();
-            Class<?> resourceClass = resourceInfo.getResourceClass();
-
-            if (isSecured(method)) {
-                List<String> rolesAllowed = getRolesAllowed(method.getAnnotation(Secured.class));
-                if (!rolesAllowed.isEmpty() && !rolesAllowed.contains(rol)) {
-                    abortWithUnauthorized(requestContext, "El usuario no tiene los permisos necesarios. 1 " + rol);
-                    return;
-                }
-            } else if (isSecured(resourceClass)) {
-                List<String> rolesAllowed = getRolesAllowed(resourceClass.getAnnotation(Secured.class));
-                if (!rolesAllowed.isEmpty() && !rolesAllowed.contains(rol)) {
-                    abortWithUnauthorized(requestContext, "El usuario no tiene los permisos necesarios. 2 " + rol);
-                    return;
-                }
-            }
-
         } catch (ExpiredJwtException e) {
             abortWithUnauthorized(requestContext, "El token ha expirado.");
         } catch (SignatureException e) {
@@ -99,18 +78,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             LOGGER.log(Level.SEVERE, "Error inesperado durante la validación del token", e);
             abortWithUnauthorized(requestContext, "Error inesperado al procesar el token.");
         }
-    }
-
-    private boolean isSecured(Method method) {
-        return method != null && method.isAnnotationPresent(Secured.class);
-    }
-
-    private boolean isSecured(Class<?> resourceClass) {
-        return resourceClass != null && resourceClass.isAnnotationPresent(Secured.class);
-    }
-
-    private List<String> getRolesAllowed(Secured secured) {
-        return Arrays.asList(secured.rolesAllowed());
     }
 
     private void abortWithUnauthorized(ContainerRequestContext requestContext, String message) {
