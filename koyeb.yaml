@@ -1,0 +1,21 @@
+# koyeb.yaml
+services:
+  - name: innovatech-app
+    # Usamos el runner oficial de Koyeb que incluye docker-compose
+    docker:
+      image: koyeb/docker-compose-runner:latest
+      # El comando que se ejecutará al iniciar
+      command: ["docker-compose", "up"]
+    ports:
+      # Exponemos el puerto de la aplicación que definiste en docker-compose.yml ("1000:9090")
+      - port: 1000
+        protocol: HTTP
+    # Definimos las rutas públicas que apuntarán a este servicio
+    routes:
+      - path: "/"
+        port: 1000
+    # Es buena idea tener un health check para que Koyeb sepa si tu app está sana
+    health_checks:
+      - port: 1000
+        protocol: HTTP
+        path: / # Cambia esto si tu app tiene un endpoint específico de health check

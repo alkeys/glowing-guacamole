@@ -11,7 +11,6 @@ import com.in.nova.tech.controller.TecnicoBean;
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Usuario;
-
 import com.in.nova.tech.utils.PasswordHashSeguro;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
