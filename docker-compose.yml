@@ -5,6 +5,7 @@ services:
     ports:
       - "1000:9090"
       - "9443:9443"
+      - "8000:9090"
     environment:
       - serverName=db
     depends_on:

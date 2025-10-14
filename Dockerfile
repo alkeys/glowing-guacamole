@@ -38,7 +38,7 @@ COPY --chown=1001:0 src/main/liberty/config/postgresql-42.7.6.jar /config/
 COPY --chown=1001:0 --from=build /app/target/*.war /config/dropins/
 
 # Exponer puertos (ajustar según server.xml) el puerto 1000 es para render
-EXPOSE  9494 1000  9090
+EXPOSE  9494 1000 8000 9090
 
 # Comando para iniciar Open Liberty
 CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer"]
