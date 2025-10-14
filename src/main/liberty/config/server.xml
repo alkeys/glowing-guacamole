@@ -27,17 +27,28 @@
                 password="${env.DB_PASSWORD}"
                 databaseName="${env.DB_NAME}"
                 serverName="${env.DB_HOST}"
-                portNumber="6543"/>  
+                portNumber="5432"/>  
+
+    <!--   para conexion local -->
 
 
 
-        <!-- Pool esto sirver apara las maxima conexion funciona muy bien con supabase -->
-        <!-- maxPoolSize esto define el tamaño máximo de conexiones en el pool 
-            minPoolSize esto define el tamaño mínimo de conexiones en el pool
-            maxIdleTime esto define el tiempo máximo que una conexión puede estar inactiva en el pool
-            connectionTimeout esto define el tiempo máximo que se espera para obtener una conexión del pool
-        -->
-        <connectionManager maxPoolSize="20" minPoolSize="5" maxIdleTime="300" connectionTimeout="30"/>
+
+
+    <connectionManager
+        maxPoolSize="50"
+        minPoolSize="10"
+        maxIdleTime="600"
+        connectionTimeout="30"
+        reapTime="30"
+        agedTimeout="0"
+        connectionRetryInterval="10"
+        failIfCannotConnect="true"
+        disableBidiStatementCaching="false"
+        validationTimeout="5"
+    >
+        <purgePolicy statementCache="true"/>
+    </connectionManager>
     </dataSource>
 
     <library id="postgresql-library">
