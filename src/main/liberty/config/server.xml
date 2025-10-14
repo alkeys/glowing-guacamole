@@ -29,19 +29,15 @@
                 serverName="${env.DB_HOST}"
                 portNumber="6543"/>  
 
-    <!--   para conexion local -->
-         <!-- <properties.postgresql
-                user="admin"
-                password="admin"
-                databaseName="innovaTech"
-                serverName="localhost"
-                portNumber="5432"/> -->
-
-
 
 
         <!-- Pool esto sirver apara las maxima conexion funciona muy bien con supabase -->
-         <connectionManager maxPoolSize="10" minPoolSize="2" maxIdleTime="400s"/>
+        <!-- maxPoolSize esto define el tamaño máximo de conexiones en el pool 
+            minPoolSize esto define el tamaño mínimo de conexiones en el pool
+            maxIdleTime esto define el tiempo máximo que una conexión puede estar inactiva en el pool
+            connectionTimeout esto define el tiempo máximo que se espera para obtener una conexión del pool
+        -->
+        <connectionManager maxPoolSize="20" minPoolSize="5" maxIdleTime="300" connectionTimeout="30"/>
     </dataSource>
 
     <library id="postgresql-library">

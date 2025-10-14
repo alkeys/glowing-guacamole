@@ -11,8 +11,6 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.TecnicoBean;
 import com.in.nova.tech.dto.TecnicoDto;
 import com.in.nova.tech.entity.Tecnico;
-import com.in.nova.tech.filter.Secured;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.DELETE;

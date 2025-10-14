@@ -12,7 +12,6 @@ import com.in.nova.tech.dto.ClienteDto;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
-import com.in.nova.tech.filter.Secured;
 
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;

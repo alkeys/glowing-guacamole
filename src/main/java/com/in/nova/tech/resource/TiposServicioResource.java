@@ -5,7 +5,7 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.TiposServicioBean;
 import com.in.nova.tech.dto.TiposServicioDto;
 import com.in.nova.tech.entity.TiposServicio;
-import com.in.nova.tech.filter.Secured;
+
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;

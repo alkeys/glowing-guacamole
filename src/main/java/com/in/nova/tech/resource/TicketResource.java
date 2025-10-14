@@ -10,7 +10,7 @@ package com.in.nova.tech.resource;
 import com.in.nova.tech.controller.*;
 import com.in.nova.tech.dto.TicketDto;
 import com.in.nova.tech.entity.*;
-import com.in.nova.tech.filter.Secured;
+
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;

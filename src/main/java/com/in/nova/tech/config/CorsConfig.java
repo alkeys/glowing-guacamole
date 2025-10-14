@@ -1,10 +1,4 @@
-/*
-Copyright (c) 2025 Alexander Aviles
-Licencia: Creative Commons Attribution-NonCommercial 4.0 International
-Prohibido su uso con fines comerciales.
-Ver: https://creativecommons.org/licenses/by-nc/4.0/
-*/
-
+// ...existing code...
 package com.in.nova.tech.config;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -18,10 +12,16 @@ public class CorsConfig implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
             throws IOException {
-        responseContext.getHeaders().add("Access-Control-Allow-Origin", "*"); 
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
-        responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
-        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        responseContext.getHeaders().add("Access-Control-Max-Age", "1209600");
+        String origin = requestContext.getHeaderString("*");
+        if (origin != null) {
+            responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", origin);
+            responseContext.getHeaders().putSingle("Vary", "Origin");
+        } else {
+            responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
+        }
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Credentials", "true");
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        responseContext.getHeaders().putSingle("Access-Control-Max-Age", "1209600");
     }
 }

@@ -11,7 +11,7 @@ import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.EstadosTicketBean;
 import com.in.nova.tech.dto.EstadosTicketDto;
 import com.in.nova.tech.entity.EstadosTicket;
-import com.in.nova.tech.filter.Secured;
+
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;

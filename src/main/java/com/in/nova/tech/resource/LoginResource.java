@@ -8,7 +8,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Usuario;
-import com.in.nova.tech.utils.JwtUtil;
 import com.in.nova.tech.utils.PasswordHashSeguro;
 
 import jakarta.inject.Inject;
@@ -26,8 +25,6 @@ public class LoginResource implements Serializable {
     @Inject
     private UsuarioBean usuarioBean;
 
-    @Inject
-    private JwtUtil jwtUtil;
 
     @POST
     @Path("/login")
@@ -46,12 +43,11 @@ public class LoginResource implements Serializable {
         }
 
         if (PasswordHashSeguro.checkPassword(credentials.getContrasena(), usuario.getContrasenaHash())) {
-            String token = jwtUtil.generateToken(usuario);
             String tecnicoJson = usuario.getTecnico() != null ? usuario.getTecnico().toJson() : "null";
             String clienteJson = usuario.getCliente() != null ? usuario.getCliente().toJson() : "null";
             String responseJson = String.format(
-                "{\"token\":\"%s\", \"rol_cargado\":\"%s\", \"userId\":%d, \"tecnico\":%s, \"cliente\":%s}",
-                token, usuario.getRol(), usuario.getId(), tecnicoJson, clienteJson
+                "{\"rol_cargado\":\"%s\", \"userId\":%d, \"tecnico\":%s, \"cliente\":%s}",
+                 usuario.getRol(), usuario.getId(), tecnicoJson, clienteJson
             );
             return Response.ok(responseJson).build();
         } else {
