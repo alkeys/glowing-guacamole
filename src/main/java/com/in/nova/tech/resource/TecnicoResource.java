@@ -6,29 +6,34 @@ Ver: https://creativecommons.org/licenses/by-nc/4.0/
 */
 package com.in.nova.tech.resource;
 
-
 import com.in.nova.tech.controller.AbstractDataPersistence;
 import com.in.nova.tech.controller.TecnicoBean;
+import com.in.nova.tech.controller.UsuarioBean;
 import com.in.nova.tech.dto.TecnicoDto;
 import com.in.nova.tech.entity.Tecnico;
+import com.in.nova.tech.entity.Usuario;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
+
+import java.util.logging.Logger;
 
 @Path("/tecnicos")
 @Tags(value = {
     @Tag(name = "Técnicos", description = "Operaciones relacionadas con los técnicos, incluyendo CRUD y gestión de datos.")
 })
-public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,Integer> {
+public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto, Integer> {
+
+    private static final Logger LOG = Logger.getLogger(TecnicoResource.class.getName());
 
     @Inject
     TecnicoBean tecnicoBean;
+
+    @Inject
+    UsuarioBean usuarioBean; // Inyectar UsuarioBean
 
     @Override
     protected AbstractDataPersistence<Tecnico> getService() {
@@ -41,19 +46,16 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
     }
 
     @Override
-    protected void setId(Tecnico entity, Integer integer) {
-
+    protected void setId(Tecnico entity, Integer id) {
+        entity.setId(id);
     }
 
-    /**
-     * Mapeo entre entidad y DTO
-     * @param entity
-     * @return DTO
-     */
     @Override
     protected TecnicoDto toDto(Tecnico entity) {
         TecnicoDto dto = new TecnicoDto();
-        dto.setIdUsuario(entity.getIdUsuario().getId());
+        if (entity.getIdUsuario() != null) {
+            dto.setIdUsuario(entity.getIdUsuario().getId());
+        }
         dto.setId(entity.getId());
         dto.setEspecialidad(entity.getEspecialidad());
         dto.setNombreCompleto(entity.getNombreCompleto());
@@ -61,34 +63,68 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
         return dto;
     }
 
-
-    /**
-     * Mapeo entre DTO y entidad
-     * @param dto
-     * @return Entidad
-     */
     @Override
     protected Tecnico toEntity(TecnicoDto dto) {
+        // Este método sigue siendo útil para la creación, pero no para la actualización.
         Tecnico entity = new Tecnico();
-        entity.setIdUsuario(tecnicoBean.findUsuarioById(dto.getIdUsuario()));
+        if (dto.getIdUsuario() != null) {
+            Usuario usuario = usuarioBean.findById(dto.getIdUsuario());
+            if (usuario == null) {
+                throw new WebApplicationException("El usuario con ID " + dto.getIdUsuario() + " no existe.", Response.Status.BAD_REQUEST);
+            }
+            entity.setIdUsuario(usuario);
+        }
         entity.setId(dto.getId());
         entity.setEspecialidad(dto.getEspecialidad());
         entity.setNombreCompleto(dto.getNombreCompleto());
-        entity.setActivo(dto.getActivo() != null ? dto.getActivo() : true); // Por defecto activo
+        entity.setActivo(dto.getActivo() != null ? dto.getActivo() : true);
         return entity;
     }
 
+    @Override
+    @Transactional
+    public Response actualizar(Integer id, TecnicoDto dto) {
+        LOG.info("Iniciando lógica de actualización CORRECTA para técnico ID: " + id);
 
+        // 1. Validar que el idUsuario no esté ya asignado a OTRO técnico
+        if (dto.getIdUsuario() != null) {
+            Tecnico tecnicoConMismoUsuario = tecnicoBean.findByUsuarioId(dto.getIdUsuario());
+            if (tecnicoConMismoUsuario != null && !tecnicoConMismoUsuario.getId().equals(id)) {
+                throw new WebApplicationException("El usuario con ID " + dto.getIdUsuario() + " ya está asignado a otro técnico (ID: " + tecnicoConMismoUsuario.getId() + ").", Response.Status.CONFLICT);
+            }
+        }
 
-    /**
-     * Eliminar un técnico por su ID.
-     * Antes de eliminar, verifica si el técnico tiene órdenes de trabajo asociadas.
-     * Si tiene órdenes asociadas, realiza un borrado lógico (desactiva el técnico).
-     * y todos los trabajos asociados a ese tecnico se quedan al tecnico con menos trabajos asociados
-     * Si no tiene órdenes asociadas, elimina físicamente el técnico.
-     * @param id El ID del técnico a eliminar.
-     * @return Respuesta HTTP indicando el resultado de la operación.
-     */
+        // 2. Cargar la entidad existente de la base de datos
+        Tecnico entityToUpdate = tecnicoBean.findById(id);
+        if (entityToUpdate == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"No se encontró el técnico con id: " + id + "\"}").build();
+        }
+
+        // 3. Cargar el usuario a asociar
+        Usuario usuarioAsociado = null;
+        if (dto.getIdUsuario() != null) {
+            usuarioAsociado = usuarioBean.findById(dto.getIdUsuario());
+            if (usuarioAsociado == null) {
+                throw new WebApplicationException("El usuario a asignar (ID: " + dto.getIdUsuario() + ") no existe.", Response.Status.BAD_REQUEST);
+            }
+        }
+
+        // 4. Actualizar los campos de la entidad con los valores del DTO
+        entityToUpdate.setNombreCompleto(dto.getNombreCompleto());
+        entityToUpdate.setEspecialidad(dto.getEspecialidad());
+        entityToUpdate.setActivo(dto.getActivo());
+        entityToUpdate.setIdUsuario(usuarioAsociado);
+
+        // 5. Persistir la entidad actualizada
+        try {
+            Tecnico updatedEntity = tecnicoBean.update(entityToUpdate);
+            return Response.ok(toDto(updatedEntity)).build();
+        } catch (Exception e) {
+            LOG.log(java.util.logging.Level.SEVERE, "Error al persistir la actualización del técnico", e);
+            throw new WebApplicationException("Error interno del servidor al guardar la actualización.", Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Override
     @DELETE
     @Path("/eliminar/{id}")
@@ -97,25 +133,20 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
         Tecnico entity = tecnicoBean.findById(id);
         if (entity != null && entity.getActivo()) {
             Integer idTecnicoConMenosTickets = tecnicoBean.tecnicoConMenosTickets();
-            // Reasigna todos los tickets del técnico actual al técnico con menos tickets
             tecnicoBean.reasignarTodosLosTickets(id, idTecnicoConMenosTickets);
-            // Desactiva el técnico actual
             preDelete(id, false);
-            return  Response.ok()
+            return Response.ok()
                     .entity(String.format("El técnico con ID %d ha sido desactivado y sus tickets reasignados al técnico con menos tickets (ID: %d).", id, idTecnicoConMenosTickets))
                     .build();
-        }
-        return Response.status(Response.Status.NOT_FOUND)
+        } else {
+          return Response.status(Response.Status.NOT_FOUND)
                 .entity(String.format("El técnico con ID %d no existe o ya está desactivado.", id))
                 .build();
+        }
+        
     }
 
-    /**
-     * manejo de borrado logico si se borra un tecnico que tiene ordenes de trabajo asociadas tiene que desactivar el tecnico y no borrarlo fisicamente
-     * @param idTecnico
-     * @param x si es true  lo activa si es false lo desactiva
-     */
-    protected void preDelete(Integer idTecnico,Boolean x) {
+    protected void preDelete(Integer idTecnico, Boolean x) {
         Tecnico entity = tecnicoBean.findById(idTecnico);
         if (entity != null) {
             entity.setActivo(x);
@@ -123,10 +154,6 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
         }
     }
 
-
-    /*
-     * obtiene una lista de tecnicos activos con menos tickets asignados, opcionalmente filtrados por especialidad
-     */
     @Transactional
     @GET
     @Path("/conMenosTickets/{especialidad}")
@@ -135,7 +162,4 @@ public class TecnicoResource extends AbstractCrudResource<Tecnico, TecnicoDto,In
         var dtos = tecnicos.stream().map(this::toDto).toList();
         return Response.ok(dtos).build();
     }
-
-
-
 }

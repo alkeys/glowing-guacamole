@@ -13,6 +13,7 @@ import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 @Stateless
@@ -67,14 +68,18 @@ public class TecnicoBean extends AbstractDataPersistence<Tecnico> {
     }
 
     public Usuario findUsuarioById(Integer idUsuario) {
-        String jpql= "SELECT u FROM Usuario u WHERE u.id = :idUsuario";
-        return em.createQuery(jpql, Usuario.class)
-                .setParameter("idUsuario", idUsuario)
-                .getSingleResult();
-
+        return em.find(Usuario.class, idUsuario);
     }
 
-
+    public Tecnico findByUsuarioId(Integer idUsuario) {
+        try {
+            return em.createQuery("SELECT t FROM Tecnico t WHERE t.idUsuario.id = :idUsuario", Tecnico.class)
+                    .setParameter("idUsuario", idUsuario)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Devuelve null si no se encuentra ningún técnico, lo cual es seguro.
+        }
+    }
 
 
 /**
@@ -105,16 +110,5 @@ public class TecnicoBean extends AbstractDataPersistence<Tecnico> {
         return query.getResultList();
 
     }
-
-
-
-    public Tecnico findTecnicoByIdUsuario(Integer idUsuario) {
-        String jpql = "SELECT t FROM Tecnico t WHERE t.idUsuario.id = :idUsuario";
-        return em.createQuery(jpql, Tecnico.class)
-                .setParameter("idUsuario", idUsuario)
-                .getSingleResult();
-    }
-
-
 
 }
