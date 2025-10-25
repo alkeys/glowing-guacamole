@@ -13,6 +13,7 @@ import com.in.nova.tech.entity.Usuario;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.io.Serializable;
@@ -45,6 +46,16 @@ public class ClientesBean extends AbstractDataPersistence<Cliente> implements Se
         return em.createQuery(jpql, Cliente.class)
                 .setParameter("idUsuario", idUsuario)
                 .getSingleResult();
+    }
+
+    public Cliente findByCorreo(String correo) {
+        try {
+            return em.createQuery("SELECT c FROM Cliente c WHERE c.correo = :correo", Cliente.class)
+                    .setParameter("correo", correo)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 

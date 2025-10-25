@@ -8,9 +8,14 @@ import com.in.nova.tech.entity.TiposServicio;
 
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
+
+import java.util.logging.Logger;
 
 @Path("/tipos-servicio")
 @Tags(value = {
@@ -18,6 +23,8 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 })
 
 public class TiposServicioResource extends AbstractCrudResource<TiposServicio, TiposServicioDto,Integer> {
+
+    private static final Logger LOG = Logger.getLogger(TiposServicioResource.class.getName());
 
     @Inject
     private TiposServicioBean tiposServicioBean;
@@ -57,5 +64,29 @@ public class TiposServicioResource extends AbstractCrudResource<TiposServicio, T
         entity.setId(dto.getId());
         entity.setNombreTipo(dto.getNombre());
         return entity;
+    }
+
+    @Override
+    @Transactional
+    public Response actualizar(Integer id, TiposServicioDto dto) {
+        LOG.info("Iniciando lógica de actualización para tipo de servicio ID: " + id);
+
+        // 1. Cargar la entidad existente de la base de datos
+        TiposServicio entityToUpdate = tiposServicioBean.findById(id);
+        if (entityToUpdate == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"No se encontró el tipo de servicio con id: " + id + "\"}").build();
+        }
+
+        // 2. Actualizar los campos de la entidad con los valores del DTO
+        entityToUpdate.setNombreTipo(dto.getNombre());
+
+        // 3. Persistir la entidad actualizada
+        try {
+            TiposServicio updatedEntity = tiposServicioBean.update(entityToUpdate);
+            return Response.ok(toDto(updatedEntity)).build();
+        } catch (Exception e) {
+            LOG.log(java.util.logging.Level.SEVERE, "Error al persistir la actualización", e);
+            throw new WebApplicationException("Error interno del servidor al guardar la actualización.", Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 }

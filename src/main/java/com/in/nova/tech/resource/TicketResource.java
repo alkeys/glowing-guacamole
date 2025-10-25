@@ -13,10 +13,14 @@ import com.in.nova.tech.entity.*;
 
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.POST;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.openapi.annotations.tags.Tags;
+
+import java.util.logging.Logger;
 
 
 @Path("/tickets")
@@ -24,6 +28,8 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
     @Tag(name = "Gestion de Rest Ticket", description = "Operaciones relacionadas con los tickets, incluyendo CRUD y gestión de datos.")
 })
 public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Integer> {
+
+    private static final Logger LOG = Logger.getLogger(TicketResource.class.getName());
 
    @Inject
     private TicketBean ticketBean;
@@ -147,10 +153,65 @@ public class TicketResource extends AbstractCrudResource<Ticket, TicketDto, Inte
         return ticket;
     }
 
+    @Override
+    @Transactional
+    public Response actualizar(Integer id, TicketDto dto) {
+        LOG.info("Iniciando lógica de actualización para ticket ID: " + id);
 
+        // 1. Cargar la entidad existente de la base de datos
+        Ticket entityToUpdate = ticketBean.findById(id);
+        if (entityToUpdate == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"No se encontró el ticket con id: " + id + "\"}").build();
+        }
 
+        // 2. Actualizar los campos y relaciones de la entidad con los valores del DTO
+        if (dto.getIdCliente() != null) {
+            Cliente cliente = clientesBean.findById(dto.getIdCliente());
+            if (cliente == null) {
+                throw new WebApplicationException("El cliente con ID " + dto.getIdCliente() + " no existe.", Response.Status.BAD_REQUEST);
+            }
+            entityToUpdate.setIdCliente(cliente);
+        }
 
+        if (dto.getIdTipoServicio() != null) {
+            TiposServicio tipoServicio = tiposServicioBean.findById(dto.getIdTipoServicio());
+            if (tipoServicio == null) {
+                throw new WebApplicationException("El tipo de servicio con ID " + dto.getIdTipoServicio() + " no existe.", Response.Status.BAD_REQUEST);
+            }
+            entityToUpdate.setIdTipoServicio(tipoServicio);
+        }
 
+        if (dto.getIdTecnico() != null) {
+            Tecnico tecnico = tecnicosBean.findById(dto.getIdTecnico());
+            if (tecnico == null) {
+                throw new WebApplicationException("El técnico con ID " + dto.getIdTecnico() + " no existe.", Response.Status.BAD_REQUEST);
+            }
+            entityToUpdate.setIdTecnico(tecnico);
+        } else {
+            entityToUpdate.setIdTecnico(null);
+        }
 
+        if (dto.getIdEstado() != null) {
+            EstadosTicket estado = estadosTicketBean.findById(dto.getIdEstado());
+            if (estado == null) {
+                throw new WebApplicationException("El estado del ticket con ID " + dto.getIdEstado() + " no existe.", Response.Status.BAD_REQUEST);
+            }
+            entityToUpdate.setIdEstado(estado);
+        }
 
+        entityToUpdate.setFechaSolicitud(dto.getFechaSolicitud());
+        entityToUpdate.setFechaAsignacion(dto.getFechaAsignacion());
+        entityToUpdate.setFechaCierre(dto.getFechaCierre());
+        entityToUpdate.setDiagnostico(dto.getDiagnostico());
+        entityToUpdate.setSolucion(dto.getSolucion());
+
+        // 3. Persistir la entidad actualizada
+        try {
+            Ticket updatedEntity = ticketBean.update(entityToUpdate);
+            return Response.ok(toDto(updatedEntity)).build();
+        } catch (Exception e) {
+            LOG.log(java.util.logging.Level.SEVERE, "Error al persistir la actualización del ticket", e);
+            throw new WebApplicationException("Error interno del servidor al guardar la actualización.", Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
