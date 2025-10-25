@@ -13,6 +13,7 @@ import com.in.nova.tech.dto.UsuarioDto;
 import com.in.nova.tech.entity.Cliente;
 import com.in.nova.tech.entity.Ticket;
 
+import com.in.nova.tech.entity.Usuario;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
@@ -120,18 +121,37 @@ public class ClienteResource extends AbstractCrudResource<Cliente,ClienteDto,Int
             throw new WebApplicationException("El correo electrónico '" + dto.getCorreo() + "' ya está en uso por otro cliente.", Response.Status.CONFLICT);
         }
 
-        // 2. Cargar la entidad existente de la base de datos
+        // 2. Validar conflicto de asignación de usuario
+        if (dto.getUsuarioId() != null) {
+            Cliente clienteConMismoUsuario = clientesBean.findClienteByIdUsuario(dto.getUsuarioId());
+            if (clienteConMismoUsuario != null && !clienteConMismoUsuario.getId().equals(id)) {
+                throw new WebApplicationException("El usuario con ID " + dto.getUsuarioId() + " ya está asignado a otro cliente.", Response.Status.CONFLICT);
+            }
+        }
+
+        // 3. Cargar la entidad existente de la base de datos
         Cliente entityToUpdate = clientesBean.findById(id);
         if (entityToUpdate == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"No se encontró el cliente con id: " + id + "\"}").build();
         }
 
-        // 3. Actualizar los campos de la entidad con los valores del DTO
+        // 4. Actualizar los campos de la entidad con los valores del DTO
         entityToUpdate.setNombreCompleto(dto.getNombreCompleto());
         entityToUpdate.setCorreo(dto.getCorreo());
         entityToUpdate.setTelefono(dto.getTelefono());
 
-        // 4. Persistir la entidad actualizada
+        // 5. Actualizar la asociación del usuario
+        if (dto.getUsuarioId() != null) {
+            Usuario usuarioAsociado = usuarioBean.findById(dto.getUsuarioId());
+            if (usuarioAsociado == null) {
+                throw new WebApplicationException("El usuario a asignar (ID: " + dto.getUsuarioId() + ") no existe.", Response.Status.BAD_REQUEST);
+            }
+            entityToUpdate.setIdUsuario(usuarioAsociado);
+        } else {
+            entityToUpdate.setIdUsuario(null); // Permitir desasociar un usuario
+        }
+
+        // 6. Persistir la entidad actualizada
         try {
             Cliente updatedEntity = clientesBean.update(entityToUpdate);
             return Response.ok(toDto(updatedEntity)).build();

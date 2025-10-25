@@ -35,17 +35,25 @@ public class ClientesBean extends AbstractDataPersistence<Cliente> implements Se
     }
 
     public Usuario findUsuarioById(Integer idUsuario) {
-        String jpql = "SELECT u FROM Usuario u WHERE u.id = :idUsuario";
-        return em.createQuery(jpql, Usuario.class)
-                .setParameter("idUsuario", idUsuario)
-                .getSingleResult();
+        try {
+            String jpql = "SELECT u FROM Usuario u WHERE u.id = :idUsuario";
+            return em.createQuery(jpql, Usuario.class)
+                    .setParameter("idUsuario", idUsuario)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Cliente findClienteByIdUsuario(Integer idUsuario) {
-        String jpql = "SELECT c FROM Cliente c WHERE c.idUsuario.id = :idUsuario";
-        return em.createQuery(jpql, Cliente.class)
-                .setParameter("idUsuario", idUsuario)
-                .getSingleResult();
+        try {
+            String jpql = "SELECT c FROM Cliente c WHERE c.idUsuario.id = :idUsuario";
+            return em.createQuery(jpql, Cliente.class)
+                    .setParameter("idUsuario", idUsuario)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public Cliente findByCorreo(String correo) {
